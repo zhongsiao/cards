@@ -22,9 +22,9 @@
 </head>
 <body class="min-h-screen p-4 md:p-8 flex flex-col items-center justify-center">
 
-<!-- 音效預載 -->
 <audio id="click-sound" src="https://actions.google.com/sounds/v1/ui/button_click.ogg" preload="auto"></audio>
 
+<!-- 階段 1 -->
 <div id="stage1" class="w-full max-w-4xl text-center fade-in">
     <div class="mb-12">
         <h1 class="text-3xl md:text-5xl font-bold mb-4 tracking-wider text-gray-800">微型觀察紀錄</h1>
@@ -41,6 +41,7 @@
     <button id="btn-start" class="hidden mx-auto btn-primary px-12 py-4 rounded-full text-xl font-bold shadow-lg transition transform hover:-translate-y-1 hover:shadow-xl">開啟對話 <i class="fas fa-arrow-right ml-2"></i></button>
 </div>
 
+<!-- 階段 2 -->
 <div id="stage2" class="w-full max-w-3xl text-center fade-in">
     <div class="flex items-center justify-center gap-3 mb-8">
         <div class="w-3 h-3 bg-red-500 rounded-full recording-pulse" id="recording-indicator"></div>
@@ -51,7 +52,7 @@
         <div class="text-6xl md:text-7xl font-sans text-gray-800 mb-6 tracking-widest" id="timer" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 200;">00:00</div>
         <div class="flex gap-4">
             <button id="btn-pause" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-full font-semibold transition"><i class="fas fa-pause mr-2"></i>暫停</button>
-            <button id="btn-end" class="bg-gray-800 hover:bg-black text-white px-8 py-3 rounded-full font-semibold shadow-lg transition"><i class="fas fa-check mr-2"></i>結束並萃取故事</button>
+            <button id="btn-end" class="bg-gray-800 hover:bg-black text-white px-8 py-3 rounded-full font-semibold shadow-lg transition"><i class="fas fa-check mr-2"></i>結束訪談</button>
         </div>
     </div>
     <div class="relative max-w-2xl mx-auto">
@@ -61,37 +62,41 @@
     </div>
 </div>
 
+<!-- 階段 3 -->
 <div id="stage3" class="w-full max-w-2xl text-center fade-in pb-12">
-    <h2 class="text-3xl font-bold mb-8 text-gray-800 tracking-widest">微型觀察：故事印記</h2>
+    <h2 class="text-3xl font-bold mb-8 text-gray-800 tracking-widest">微型觀察：故事紀錄</h2>
     <div class="bg-white rounded-3xl shadow-2xl overflow-hidden mb-10 border border-gray-100 text-left">
-        <div class="w-full h-64 md:h-80 relative flex items-center justify-center overflow-hidden bg-[#e9ecef]">
+        <div class="w-full h-48 relative flex items-center justify-center overflow-hidden bg-[#e9ecef]">
             <img src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Generated Artwork" class="w-full h-full object-cover mix-blend-multiply opacity-90">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-            <div class="absolute bottom-6 left-6 md:bottom-8 md:left-8 text-white">
+            <div class="absolute bottom-6 left-6 text-white">
                 <div class="flex gap-2 mb-2">
                     <span class="bg-white/20 backdrop-blur-md border border-white/30 px-4 py-1.5 rounded-full text-sm font-semibold tracking-widest" id="tag1">標籤 1</span>
                     <span class="bg-white/20 backdrop-blur-md border border-white/30 px-4 py-1.5 rounded-full text-sm font-semibold tracking-widest" id="tag2">標籤 2</span>
                 </div>
             </div>
         </div>
-        <div class="p-8 md:p-10">
-            <h3 class="font-bold text-2xl mb-6 text-gray-900 border-b pb-4" id="summary-title">故事萃取中...</h3>
-            <div class="mb-8 relative">
-                <i class="fas fa-quote-left text-4xl text-gray-200 absolute -top-4 -left-2"></i>
-                <p class="text-gray-700 text-lg leading-loose font-medium italic relative z-10 pl-6" id="quote">"擷取對話中最觸動人心的金句..."</p>
+        <div class="p-8">
+            <div class="mb-6 relative">
+                <i class="fas fa-quote-left text-3xl text-gray-200 absolute -top-4 -left-2"></i>
+                <p class="text-gray-700 text-base leading-loose font-medium relative z-10 pl-6 h-32 overflow-y-auto" id="quote-preview">
+                    文字稿整理中...
+                </p>
             </div>
-            <p class="text-gray-600 mb-8 leading-relaxed text-justify" id="summary-content">
-                系統總結與回饋建議載入中...
-            </p>
-            <div class="bg-[#f8f9fa] border-l-4 border-[#d4a373] p-4 rounded-r-lg">
-                <p class="text-sm font-bold text-gray-700 mb-1">給予的幫助與下一步：</p>
-                <p class="text-sm text-gray-600">AI 根據對話，建議你可以為他提供的一點小協助...</p>
+            
+            <div class="bg-[#f8f9fa] border-l-4 border-[#d4a373] p-4 rounded-r-lg mt-4 text-sm text-gray-600">
+                由於瀏覽器限制，請點擊下方下載完整文字稿，再將檔案匯入 AI 工具進行深度摘要與分析。
             </div>
         </div>
     </div>
+    
     <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <button id="btn-share" class="bg-gray-900 text-white px-8 py-4 rounded-full text-lg font-bold shadow-xl hover:bg-black transition inline-flex items-center justify-center gap-3"><i class="fas fa-share-nodes"></i> 匯出與分享</button>
-        <button onclick="location.reload()" class="bg-white border-2 border-gray-200 text-gray-600 px-8 py-4 rounded-full text-lg font-bold shadow-sm hover:bg-gray-50 transition inline-flex items-center justify-center gap-3"><i class="fas fa-redo"></i> 展開新訪談</button>
+        <button id="btn-download" class="bg-blue-600 text-white px-8 py-4 rounded-full text-lg font-bold shadow-xl hover:bg-blue-700 transition inline-flex items-center justify-center gap-3">
+            <i class="fas fa-file-download"></i> 下載文字稿 (TXT)
+        </button>
+        <button onclick="location.reload()" class="bg-white border-2 border-gray-200 text-gray-600 px-8 py-4 rounded-full text-lg font-bold shadow-sm hover:bg-gray-50 transition inline-flex items-center justify-center gap-3">
+            <i class="fas fa-redo"></i> 展開新訪談
+        </button>
     </div>
 </div>
 
@@ -135,16 +140,21 @@
         recognition.onresult = (e) => {
             let interim = '';
             for (let i = e.resultIndex; i < e.results.length; ++i) {
-                if (e.results[i].isFinal) finalTranscript += e.results[i][0].transcript + "，";
-                else interim += e.results[i][0].transcript;
+                let text = e.results[i][0].transcript.trim();
+                // 過濾掉單純的標點符號跟無意義空白
+                if(text && !text.match(/^[，。、 ]+$/)) {
+                    if (e.results[i].isFinal) finalTranscript += text + "，";
+                    else interim += text;
+                }
             }
-            document.getElementById('transcript').innerHTML = finalTranscript + '<span class="text-gray-400">' + interim + '</span>';
+            // 處理顯示畫面的連續標點
+            let displayTranscript = finalTranscript.replace(/[，]+/g, '，');
+            document.getElementById('transcript').innerHTML = displayTranscript + '<span class="text-gray-400">' + interim + '</span>';
         };
 
-        // 核心修復：斷線自動重連機制
         recognition.onend = () => {
             if (!isPaused && !isEnded) {
-                try { recognition.start(); } catch(e) { console.log("重連失敗", e); }
+                try { recognition.start(); } catch(e) {}
             }
         };
     }
@@ -202,27 +212,32 @@
         document.getElementById('tag1').textContent = selectedCards[0].dataset.name;
         document.getElementById('tag2').textContent = selectedCards[1].dataset.name;
         
-        setTimeout(() => {
-            document.getElementById('summary-title').textContent = "歲月裡的微光";
-            if(finalTranscript.length > 5) {
-                document.getElementById('quote').textContent = finalTranscript.substring(0, 40) + "...";
-            } else {
-                document.getElementById('quote').textContent = "有時候，最難以啟齒的挑戰，反而蘊含著最大的力量。";
-            }
-            document.getElementById('summary-content').innerHTML = `這是一場從「<b>${selectedCards[0].dataset.name}</b>」走向「<b>${selectedCards[1].dataset.name}</b>」的對話。<br><br>在方才的交流中，感受到對方在面對生活時的堅韌。未來若有機會，或許可以針對這方面，分享一些你過去克服困難的經驗。`;
-        }, 1500);
+        // 顯示清理過的預覽稿
+        let cleanText = finalTranscript.replace(/[，]+/g, '，');
+        document.getElementById('quote-preview').textContent = cleanText || "無有效語音紀錄。";
     });
 
-    document.getElementById('btn-share').addEventListener('click', async () => {
-        const shareData = {
-            title: '微型觀察紀錄 - 故事印記',
-            text: document.getElementById('summary-title').textContent + '\n\n' + document.getElementById('quote').textContent,
-            url: window.location.href
-        };
-        try {
-            if (navigator.share) await navigator.share(shareData);
-            else alert('已複製內容，可直接貼上至社群軟體。');
-        } catch (err) { console.error(err); }
+    document.getElementById('btn-download').addEventListener('click', () => {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const filename = `訪談紀錄_${year}${month}${day}_${hours}${minutes}.txt`;
+        
+        let cleanText = finalTranscript.replace(/[，]+/g, '，');
+        const content = `【微型觀察紀錄】\n主題：${selectedCards[0].dataset.name} & ${selectedCards[1].dataset.name}\n時間：${year}/${month}/${day} ${hours}:${minutes}\n\n【訪談逐字稿】\n${cleanText}`;
+        
+        const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     });
 </script>
 </body>
