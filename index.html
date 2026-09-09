@@ -111,7 +111,28 @@
         </button>
     </div>
 </div>
-
+            <!-- 微型觀察家建議區塊的結尾 -->
+            <div class="bg-[#faedcd] border-l-4 border-[#d4a373] p-5 rounded-r-lg mt-4">
+                <p class="text-sm font-bold text-gray-800 mb-2"><i class="fas fa-lightbulb text-yellow-600 mr-2"></i>微型觀察家建議：</p>
+                <p class="text-base text-gray-700 leading-relaxed font-medium" id="ai-suggestion"></p>
+            </div>
+            
+            <!-- ▼▼▼ 請將以下這段貼在這裡 ▼▼▼ -->
+            <div class="mt-8 bg-white border border-gray-100 p-4 rounded-2xl shadow-sm flex items-center justify-between">
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 bg-gray-50 rounded-full flex items-center justify-center shadow-inner">
+                        <i class="fas fa-music text-[#d4a373] text-lg"></i>
+                    </div>
+                    <div class="text-left">
+                        <p class="text-sm font-bold text-gray-800 tracking-wider">歲月裡的微光</p>
+                        <p class="text-xs text-gray-500">專屬故事配樂</p>
+                    </div>
+                </div>
+                <audio id="story-bgm" controls class="h-10 w-40 md:w-48 outline-none">
+                    <source src="bgm.mp3" type="audio/mpeg">
+                </audio>
+            </div>
+            <!-- ▲▲▲ 貼上這段 ▲▲▲ -->
 <script>
     function setApiKey() {
         let currentKey = localStorage.getItem('gemini_api_key') || '';
@@ -290,6 +311,7 @@
             document.getElementById('ai-loading').style.display = 'none';
             document.getElementById('ai-result').classList.remove('hidden');
             document.getElementById('ai-result').style.display = 'block';
+            try { document.getElementById('story-bgm').play(); } catch(e) {}
         }
     });
 
