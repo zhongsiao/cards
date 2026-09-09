@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>六選二 微型觀察家</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap');
+        body { background-color: #Fdfbf7; font-family: 'Noto Serif TC', serif; color: #2c3e50; }
+        .card { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; background: #fff; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
+        .card.selected { border-color: #d4a373; background-color: #faedcd; transform: translateY(-8px) scale(1.02); box-shadow: 0 20px 25px -5px rgba(212, 163, 115, 0.3); }
+        .card:hover:not(.selected) { transform: translateY(-4px); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
+        .fade-in { animation: fadeIn 0.6s ease-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        #stage2, #stage3 { display: none; }
+        .recording-pulse { animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+        .btn-primary { background: linear-gradient(135deg, #d4a373 0%, #ccd5ae 100%); color: #2c3e50; }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-8 flex flex-col items-center justify-center">
+
+<!-- 音效預載 -->
+<audio id="click-sound" src="https://actions.google.com/sounds/v1/ui/button_click.ogg" preload="auto"></audio>
+
+<div id="stage1" class="w-full max-w-4xl text-center fade-in">
+    <div class="mb-12">
+        <h1 class="text-3xl md:text-5xl font-bold mb-4 tracking-wider text-gray-800">微型觀察紀錄</h1>
+        <p class="text-gray-500 text-lg md:text-xl font-light">「請憑直覺，選出兩張最能代表你此刻心情的卡牌。」</p>
+    </div>
+    <div id="card-container" class="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8 mb-12">
+        <div class="card border-2 border-transparent rounded-2xl p-8 flex items-center justify-center h-32 md:h-48" data-name="過去"><h2 class="text-2xl md:text-3xl font-bold text-gray-700 tracking-widest">過去</h2></div>
+        <div class="card border-2 border-transparent rounded-2xl p-8 flex items-center justify-center h-32 md:h-48" data-name="現在"><h2 class="text-2xl md:text-3xl font-bold text-gray-700 tracking-widest">現在</h2></div>
+        <div class="card border-2 border-transparent rounded-2xl p-8 flex items-center justify-center h-32 md:h-48" data-name="未來"><h2 class="text-2xl md:text-3xl font-bold text-gray-700 tracking-widest">未來</h2></div>
+        <div class="card border-2 border-transparent rounded-2xl p-8 flex items-center justify-center h-32 md:h-48" data-name="最滿意"><h2 class="text-xl md:text-2xl font-bold text-gray-700 tracking-wider">最滿意的事</h2></div>
+        <div class="card border-2 border-transparent rounded-2xl p-8 flex items-center justify-center h-32 md:h-48" data-name="最困難"><h2 class="text-xl md:text-2xl font-bold text-gray-700 tracking-wider">最大的困難</h2></div>
+        <div class="card border-2 border-transparent rounded-2xl p-8 flex items-center justify-center h-32 md:h-48" data-name="最想做"><h2 class="text-xl md:text-2xl font-bold text-gray-700 tracking-wider">最想做的事</h2></div>
+    </div>
+    <button id="btn-start" class="hidden mx-auto btn-primary px-12 py-4 rounded-full text-xl font-bold shadow-lg transition transform hover:-translate-y-1 hover:shadow-xl">開啟對話 <i class="fas fa-arrow-right ml-2"></i></button>
+</div>
+
+<div id="stage2" class="w-full max-w-3xl text-center fade-in">
+    <div class="flex items-center justify-center gap-3 mb-8">
+        <div class="w-3 h-3 bg-red-500 rounded-full recording-pulse" id="recording-indicator"></div>
+        <h2 class="text-2xl font-bold text-gray-700 tracking-widest">聆聽中...</h2>
+    </div>
+    <div id="active-cards" class="flex justify-center gap-4 md:gap-8 mb-8"></div>
+    <div class="flex flex-col items-center justify-center mb-10">
+        <div class="text-6xl md:text-7xl font-sans text-gray-800 mb-6 tracking-widest" id="timer" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-weight: 200;">00:00</div>
+        <div class="flex gap-4">
+            <button id="btn-pause" class="bg-gray-100 hover:bg-gray-200 text-gray-700 px-6 py-3 rounded-full font-semibold transition"><i class="fas fa-pause mr-2"></i>暫停</button>
+            <button id="btn-end" class="bg-gray-800 hover:bg-black text-white px-8 py-3 rounded-full font-semibold shadow-lg transition"><i class="fas fa-check mr-2"></i>結束並萃取故事</button>
+        </div>
+    </div>
+    <div class="relative max-w-2xl mx-auto">
+        <div class="bg-white/50 backdrop-blur-sm p-6 rounded-2xl text-left h-32 overflow-y-auto border border-gray-100 text-gray-500 text-base leading-relaxed opacity-70 hover:opacity-100 transition-opacity" id="transcript">
+            (開始收音...)
+        </div>
+    </div>
+</div>
+
+<div id="stage3" class="w-full max-w-2xl text-center fade-in pb-12">
+    <h2 class="text-3xl font-bold mb-8 text-gray-800 tracking-widest">微型觀察：故事印記</h2>
+    <div class="bg-white rounded-3xl shadow-2xl overflow-hidden mb-10 border border-gray-100 text-left">
+        <div class="w-full h-64 md:h-80 relative flex items-center justify-center overflow-hidden bg-[#e9ecef]">
+            <img src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Generated Artwork" class="w-full h-full object-cover mix-blend-multiply opacity-90">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
+            <div class="absolute bottom-6 left-6 md:bottom-8 md:left-8 text-white">
+                <div class="flex gap-2 mb-2">
+                    <span class="bg-white/20 backdrop-blur-md border border-white/30 px-4 py-1.5 rounded-full text-sm font-semibold tracking-widest" id="tag1">標籤 1</span>
+                    <span class="bg-white/20 backdrop-blur-md border border-white/30 px-4 py-1.5 rounded-full text-sm font-semibold tracking-widest" id="tag2">標籤 2</span>
+                </div>
+            </div>
+        </div>
+        <div class="p-8 md:p-10">
+            <h3 class="font-bold text-2xl mb-6 text-gray-900 border-b pb-4" id="summary-title">故事萃取中...</h3>
+            <div class="mb-8 relative">
+                <i class="fas fa-quote-left text-4xl text-gray-200 absolute -top-4 -left-2"></i>
+                <p class="text-gray-700 text-lg leading-loose font-medium italic relative z-10 pl-6" id="quote">"擷取對話中最觸動人心的金句..."</p>
+            </div>
+            <p class="text-gray-600 mb-8 leading-relaxed text-justify" id="summary-content">
+                系統總結與回饋建議載入中...
+            </p>
+            <div class="bg-[#f8f9fa] border-l-4 border-[#d4a373] p-4 rounded-r-lg">
+                <p class="text-sm font-bold text-gray-700 mb-1">給予的幫助與下一步：</p>
+                <p class="text-sm text-gray-600">AI 根據對話，建議你可以為他提供的一點小協助...</p>
+            </div>
+        </div>
+    </div>
+    <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <button id="btn-share" class="bg-gray-900 text-white px-8 py-4 rounded-full text-lg font-bold shadow-xl hover:bg-black transition inline-flex items-center justify-center gap-3"><i class="fas fa-share-nodes"></i> 匯出與分享</button>
+        <button onclick="location.reload()" class="bg-white border-2 border-gray-200 text-gray-600 px-8 py-4 rounded-full text-lg font-bold shadow-sm hover:bg-gray-50 transition inline-flex items-center justify-center gap-3"><i class="fas fa-redo"></i> 展開新訪談</button>
+    </div>
+</div>
+
+<script>
+    const clickSound = document.getElementById('click-sound');
+    let selectedCards = [];
+    let startTime, timerInterval, pausedTime = 0, isPaused = false, isEnded = false;
+    let finalTranscript = "";
+    
+    const cards = document.querySelectorAll('.card');
+    const btnStart = document.getElementById('btn-start');
+    
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            clickSound.currentTime = 0; clickSound.play().catch(e=>{});
+            if (selectedCards.includes(card)) {
+                card.classList.remove('selected');
+                selectedCards = selectedCards.filter(c => c !== card);
+            } else if (selectedCards.length < 2) {
+                card.classList.add('selected');
+                selectedCards.push(card);
+            }
+            if (selectedCards.length === 2) {
+                btnStart.classList.remove('hidden');
+                cards.forEach(c => { if (!selectedCards.includes(c)) { c.style.opacity = '0.3'; } });
+            } else {
+                btnStart.classList.add('hidden');
+                cards.forEach(c => { c.style.opacity = '1'; });
+            }
+        });
+    });
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    let recognition = null;
+    if (SpeechRecognition) {
+        recognition = new SpeechRecognition();
+        recognition.continuous = true;
+        recognition.interimResults = true;
+        recognition.lang = 'zh-TW';
+        
+        recognition.onresult = (e) => {
+            let interim = '';
+            for (let i = e.resultIndex; i < e.results.length; ++i) {
+                if (e.results[i].isFinal) finalTranscript += e.results[i][0].transcript + "，";
+                else interim += e.results[i][0].transcript;
+            }
+            document.getElementById('transcript').innerHTML = finalTranscript + '<span class="text-gray-400">' + interim + '</span>';
+        };
+
+        // 核心修復：斷線自動重連機制
+        recognition.onend = () => {
+            if (!isPaused && !isEnded) {
+                try { recognition.start(); } catch(e) { console.log("重連失敗", e); }
+            }
+        };
+    }
+
+    function updateTimer() {
+        const diff = Date.now() - startTime + pausedTime;
+        const m = Math.floor(diff / 60000).toString().padStart(2, '0');
+        const s = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+        document.getElementById('timer').textContent = `${m}:${s}`;
+    }
+
+    btnStart.addEventListener('click', () => {
+        document.getElementById('stage1').style.display = 'none';
+        document.getElementById('stage2').style.display = 'block';
+        const activeContainer = document.getElementById('active-cards');
+        selectedCards.forEach(card => {
+            const clone = card.cloneNode(true);
+            clone.className = 'border-2 border-[#d4a373] rounded-2xl p-4 bg-white flex items-center justify-center w-32 h-24 shadow-md';
+            clone.querySelector('h2').className = 'text-lg font-bold text-gray-700 tracking-wider';
+            activeContainer.appendChild(clone);
+        });
+        startTime = Date.now();
+        timerInterval = setInterval(updateTimer, 1000);
+        if (recognition) recognition.start();
+    });
+
+    const btnPause = document.getElementById('btn-pause');
+    btnPause.addEventListener('click', () => {
+        if (!isPaused) {
+            clearInterval(timerInterval);
+            pausedTime += Date.now() - startTime;
+            isPaused = true;
+            if (recognition) recognition.stop();
+            document.getElementById('recording-indicator').classList.remove('recording-pulse');
+            document.getElementById('recording-indicator').classList.replace('bg-red-500', 'bg-gray-400');
+            btnPause.innerHTML = '<i class="fas fa-play mr-2"></i>繼續';
+        } else {
+            startTime = Date.now();
+            timerInterval = setInterval(updateTimer, 1000);
+            isPaused = false;
+            if (recognition) recognition.start();
+            document.getElementById('recording-indicator').classList.add('recording-pulse');
+            document.getElementById('recording-indicator').classList.replace('bg-gray-400', 'bg-red-500');
+            btnPause.innerHTML = '<i class="fas fa-pause mr-2"></i>暫停';
+        }
+    });
+
+    document.getElementById('btn-end').addEventListener('click', () => {
+        clearInterval(timerInterval);
+        isEnded = true;
+        if (recognition) recognition.stop();
+        
+        document.getElementById('stage2').style.display = 'none';
+        document.getElementById('stage3').style.display = 'block';
+        document.getElementById('tag1').textContent = selectedCards[0].dataset.name;
+        document.getElementById('tag2').textContent = selectedCards[1].dataset.name;
+        
+        setTimeout(() => {
+            document.getElementById('summary-title').textContent = "歲月裡的微光";
+            if(finalTranscript.length > 5) {
+                document.getElementById('quote').textContent = finalTranscript.substring(0, 40) + "...";
+            } else {
+                document.getElementById('quote').textContent = "有時候，最難以啟齒的挑戰，反而蘊含著最大的力量。";
+            }
+            document.getElementById('summary-content').innerHTML = `這是一場從「<b>${selectedCards[0].dataset.name}</b>」走向「<b>${selectedCards[1].dataset.name}</b>」的對話。<br><br>在方才的交流中，感受到對方在面對生活時的堅韌。未來若有機會，或許可以針對這方面，分享一些你過去克服困難的經驗。`;
+        }, 1500);
+    });
+
+    document.getElementById('btn-share').addEventListener('click', async () => {
+        const shareData = {
+            title: '微型觀察紀錄 - 故事印記',
+            text: document.getElementById('summary-title').textContent + '\n\n' + document.getElementById('quote').textContent,
+            url: window.location.href
+        };
+        try {
+            if (navigator.share) await navigator.share(shareData);
+            else alert('已複製內容，可直接貼上至社群軟體。');
+        } catch (err) { console.error(err); }
+    });
+</script>
+</body>
+</html>
