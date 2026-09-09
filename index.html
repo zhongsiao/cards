@@ -18,8 +18,6 @@
         .recording-pulse { animation: pulse 1.5s infinite; }
         @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); } 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
         .btn-primary { background: linear-gradient(135deg, #d4a373 0%, #ccd5ae 100%); color: #2c3e50; }
-        
-        /* Loading 動畫 */
         .loader { border: 4px solid #f3f3f3; border-top: 4px solid #d4a373; border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
@@ -28,9 +26,8 @@
 
 <audio id="click-sound" src="https://actions.google.com/sounds/v1/ui/button_click.ogg" preload="auto"></audio>
 
-<!-- 設定 API Key 按鈕 (右上角) -->
 <button onclick="setApiKey()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-    <i class="fas fa-cog text-xl"></i>
+    <i class="fas fa-cog text-2xl"></i>
 </button>
 
 <!-- 階段 1 -->
@@ -75,13 +72,11 @@
 <div id="stage3" class="w-full max-w-2xl text-center fade-in pb-12">
     <h2 class="text-3xl font-bold mb-8 text-gray-800 tracking-widest">微型觀察：故事紀錄</h2>
     
-    <!-- AI 載入中畫面 -->
     <div id="ai-loading" class="bg-white rounded-3xl shadow-xl p-12 mb-10 flex flex-col items-center justify-center">
         <div class="loader mb-4"></div>
         <p class="text-gray-600 font-bold tracking-widest">AI 正在深度解析與萃取故事...</p>
     </div>
 
-    <!-- 成果畫面 -->
     <div id="ai-result" class="hidden bg-white rounded-3xl shadow-2xl overflow-hidden mb-10 border border-gray-100 text-left">
         <div class="w-full h-48 relative flex items-center justify-center overflow-hidden bg-[#e9ecef]">
             <img src="https://images.unsplash.com/photo-1541701494587-cb58502866ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Generated Artwork" class="w-full h-full object-cover mix-blend-multiply opacity-90">
@@ -96,19 +91,13 @@
         <div class="p-8">
             <div class="mb-6 relative">
                 <i class="fas fa-quote-left text-3xl text-gray-200 absolute -top-4 -left-2"></i>
-                <p class="text-xl text-gray-800 leading-loose font-bold relative z-10 pl-6 mb-4" id="ai-quote">
-                    (金句生成中)
-                </p>
-                <p class="text-gray-600 text-base leading-relaxed pl-6 mb-6" id="ai-summary">
-                    (摘要生成中)
-                </p>
+                <p class="text-xl text-gray-800 leading-loose font-bold relative z-10 pl-6 mb-4" id="ai-quote"></p>
+                <p class="text-gray-600 text-base leading-relaxed pl-6 mb-6" id="ai-summary"></p>
             </div>
             
             <div class="bg-[#faedcd] border-l-4 border-[#d4a373] p-5 rounded-r-lg mt-4">
                 <p class="text-sm font-bold text-gray-800 mb-2"><i class="fas fa-lightbulb text-yellow-600 mr-2"></i>微型觀察家建議：</p>
-                <p class="text-base text-gray-700 leading-relaxed font-medium" id="ai-suggestion">
-                    (建議生成中)
-                </p>
+                <p class="text-base text-gray-700 leading-relaxed font-medium" id="ai-suggestion"></p>
             </div>
         </div>
     </div>
@@ -124,13 +113,12 @@
 </div>
 
 <script>
-    // 檢查與設定 API Key
     function setApiKey() {
         let currentKey = localStorage.getItem('gemini_api_key') || '';
-        let newKey = prompt("請輸入您的 Google Gemini API Key：\n(金鑰只會儲存在您的手機本地，不會外洩)", currentKey);
-        if (newKey !== null) {
+        let newKey = prompt("設定/更新 Google Gemini API Key：", currentKey);
+        if (newKey !== null && newKey.trim() !== '') {
             localStorage.setItem('gemini_api_key', newKey.trim());
-            alert("API Key 已成功儲存！");
+            alert("API Key 儲存成功！");
         }
     }
 
@@ -198,7 +186,7 @@
     btnStart.addEventListener('click', () => {
         let apiKey = localStorage.getItem('gemini_api_key');
         if(!apiKey) {
-            alert("請先點擊右上角齒輪設定 Gemini API Key，才能在訪談後自動生成摘要喔！");
+            alert("請先點擊右上角齒輪設定 Gemini API Key！");
             setApiKey();
             if(!localStorage.getItem('gemini_api_key')) return;
         }
@@ -238,7 +226,6 @@
         }
     });
 
-    // 結束並呼叫 Gemini API
     document.getElementById('btn-end').addEventListener('click', async () => {
         clearInterval(timerInterval);
         isEnded = true;
@@ -254,29 +241,39 @@
 
         let cleanText = finalTranscript.replace(/[，]+/g, '，');
         if(cleanText.length < 10) {
-            alert("收音內容太少，無法進行有效萃取。");
             document.getElementById('ai-loading').style.display = 'none';
+            document.getElementById('ai-result').classList.remove('hidden');
             document.getElementById('ai-result').style.display = 'block';
             document.getElementById('ai-quote').textContent = "未能擷取到足夠對話";
+            document.getElementById('ai-summary').textContent = "語音辨識未收到足夠內容。";
             return;
         }
 
-        // 呼叫 Gemini 進行分析
         let apiKey = localStorage.getItem('gemini_api_key');
-        let promptText = `你現在是一位充滿人文關懷的微型觀察家。根據以下訪談逐字稿（受訪者抽到的卡牌主題是：「${card1}」與「${card2}」），請幫我萃取：\n1. 一句最具代表性、充滿溫度的金句 (不超過25字)。\n2. 故事摘要與核心困境 (約100字)。\n3. 以旁觀者角度，給予我(訪談者)一個具體建議，告訴我可以如何在事業或心靈上給予他一點幫助 (約50-80字)。\n\n請務必只輸出純 JSON 格式，不要包含 Markdown 語法 (不要有 \`\`\`json)，key 分別為 "quote", "summary", "suggestion"。\n\n逐字稿如下：${cleanText}`;
+        let promptText = `你現在是一位充滿人文關懷的微型觀察家。根據以下訪談逐字稿（受訪者抽到的卡牌主題是：「${card1}」與「${card2}」），請幫我萃取並回傳，必須包含三個欄位：
+1. "quote"：一句最具代表性、充滿溫度的金句 (不超過25字)。
+2. "summary"：故事摘要與核心困境 (約100字)。
+3. "suggestion"：以旁觀者角度，給予我(訪談者)一個具體建議，告訴我可以如何在事業或心靈上給予他一點幫助 (約50-80字)。
+
+逐字稿如下：${cleanText}`;
 
         try {
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: promptText }] }]
+                    contents: [{ parts: [{ text: promptText }] }],
+                    generationConfig: { responseMimeType: "application/json" } // V6核心更新：強制正確格式
                 })
             });
 
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error?.message || `HTTP 錯誤碼: ${response.status}`);
+            }
+
             const data = await response.json();
             let resultText = data.candidates[0].content.parts[0].text;
-            resultText = resultText.replace(/```json/g, '').replace(/```/g, '').trim();
             const aiData = JSON.parse(resultText);
 
             document.getElementById('ai-quote').textContent = "「" + aiData.quote + "」";
@@ -286,7 +283,8 @@
         } catch (error) {
             console.error(error);
             document.getElementById('ai-quote').textContent = "AI 萃取失敗";
-            document.getElementById('ai-summary').textContent = "請確認 API Key 是否正確或網路狀態。";
+            document.getElementById('ai-summary').innerHTML = `<span class="text-red-500 font-bold">錯誤原因：</span><br>${error.message}`;
+            document.getElementById('ai-suggestion').textContent = "請點選右上角齒輪，確認 API Key 是否複製完整（不可有空白）。若錯誤持續發生，請確認網路連線。";
         } finally {
             document.getElementById('ai-loading').style.display = 'none';
             document.getElementById('ai-result').classList.remove('hidden');
@@ -294,7 +292,6 @@
         }
     });
 
-    // 匯出包含 AI 摘要的 TXT
     document.getElementById('btn-download').addEventListener('click', () => {
         const now = new Date();
         const y = now.getFullYear(), m = String(now.getMonth() + 1).padStart(2, '0'), d = String(now.getDate()).padStart(2, '0');
