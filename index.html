@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>對談指針｜生命坐標與行囊交割</title>
+  <title>局內人圖鑑｜生命坐標與行囊交割儀</title>
   <style>
     :root {
       --bg-color: #F7F5F0;
@@ -45,7 +45,7 @@
     .screen {
       display: none;
       opacity: 0;
-      transition: opacity 0.35s ease;
+      transition: opacity 0.3s ease;
       width: 100%;
     }
 
@@ -54,7 +54,7 @@
       opacity: 1;
     }
 
-    /* 頂部輕標籤 */
+    /* 頂部標籤與標題 */
     .header-tag {
       font-size: 0.85rem;
       letter-spacing: 0.15em;
@@ -73,7 +73,7 @@
       letter-spacing: 0.04em;
     }
 
-    /* 第一階段：上下分流分組 */
+    /* 第一階段：上下分組與卡片佈局 */
     .section-label {
       font-size: 0.9rem;
       font-weight: 600;
@@ -95,7 +95,7 @@
       background: var(--card-bg);
       border: 1.5px solid var(--card-border);
       border-radius: 12px;
-      padding: 16px 8px;
+      padding: 18px 8px;
       text-align: center;
       font-size: 1.05rem;
       font-weight: 500;
@@ -147,7 +147,7 @@
       transform: scale(0.98);
     }
 
-    /* 第二階段：大字故事開展 */
+    /* 第二階段：大字展示與傾聽專注頁 */
     .story-focus-wrap {
       text-align: center;
       padding: 30px 12px;
@@ -196,7 +196,7 @@
       line-height: 1.8;
     }
 
-    /* 第三階段：五套副卡二留一捨 */
+    /* 第三階段：五大心理學副卡二留一捨 */
     .tradeoff-tabs {
       display: flex;
       gap: 6px;
@@ -284,7 +284,7 @@
       color: #FFFFFF;
     }
 
-    /* 第四階段：祈願收尾 */
+    /* 第四階段：制式化祈願收尾 */
     .blessing-box {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
@@ -339,7 +339,7 @@
 
   <div class="container">
     
-    <!-- 第一階段：上下分流各選一 -->
+    <!-- 第一階段：嚴格上下分流各選一 -->
     <div id="screen-step1" class="screen active">
       <div class="header-tag">生命坐標・序幕</div>
       <div class="header-title">請閉上眼，在上下兩組中各翻開一張牌</div>
@@ -393,7 +393,7 @@
       <div class="header-tag">尾聲交割・生存斷捨離</div>
       <div class="header-title">行囊有限：選 2 樣帶走，丟 1 樣在原地</div>
 
-      <!-- 五大心理學套組切換選單 -->
+      <!-- 五大普適心理學套組切換選單 -->
       <div class="tradeoff-tabs">
         <button class="tab-btn active" onclick="switchSet('A', this)">自主與動機</button>
         <button class="tab-btn" onclick="switchSet('B', this)">面具與防衛</button>
@@ -413,7 +413,7 @@
       <button id="btn-confirm-tradeoff" class="btn" disabled onclick="goToBlessingScreen()">確認行囊・交付祝福</button>
     </div>
 
-    <!-- 第四階段：祈願與祝福收尾 -->
+    <!-- 第四階段：制式化客觀祈願收尾 -->
     <div id="screen-step4" class="screen">
       <div class="header-tag">前行・微光銘記</div>
       
@@ -432,8 +432,7 @@
 
         <div class="prayer-container">
           <div class="prayer-text" id="prayer-content">
-            願你裝入行囊的底牌，成為你踏實破局的支撐；<br>
-            願你留在桌上的包袱，不再綁架明天清晨的時鐘。
+            <!-- 純客觀制式化禱詞 -->
           </div>
         </div>
       </div>
@@ -444,14 +443,14 @@
   </div>
 
   <script>
-    // 狀態變數
+    // 狀態管理
     let selectedTopCard = null;
     let selectedBottomCard = null;
     let currentSetKey = 'A';
     let keptCards = [];
     let discardedCard = null;
 
-    // 基於五大心理學架構的普適副卡資料庫
+    // 基於五大心理學架構的普適副卡資料庫 (完全抽離特定個案)
     const universalPsychSets = {
       'A': [ // 自我決定論 (Deci & Ryan)
         '掌控生活節奏的自主權',
@@ -490,7 +489,7 @@
       ]
     };
 
-    // 第一階段：上下分流選擇邏輯 (嚴格限制：上排選 1，下排選 1)
+    // 第一階段：嚴格上下各選一控制
     function selectTop(element, cardName) {
       document.querySelectorAll('#row-top .choice-card').forEach(c => c.classList.remove('selected'));
       if (selectedTopCard === cardName) {
@@ -531,7 +530,7 @@
       showScreen('screen-step2');
     }
 
-    // 第三階段：進入二留一捨
+    // 第三階段：五大套組切換與渲染
     function goToTradeoffScreen() {
       renderTradeoffCards();
       showScreen('screen-step3');
@@ -577,16 +576,13 @@
     // 二留一捨狀態循環處理：未選 -> 留 (上限2) -> 捨 (上限1) -> 取消
     function handleTradeoffClick(card) {
       if (keptCards.includes(card)) {
-        // 從「留」轉為「捨」
         keptCards = keptCards.filter(c => c !== card);
         if (!discardedCard) {
           discardedCard = card;
         }
       } else if (discardedCard === card) {
-        // 從「捨」轉為「取消」
         discardedCard = null;
       } else {
-        // 未選狀態時嘗試指派
         if (keptCards.length < 2) {
           keptCards.push(card);
         } else if (!discardedCard) {
@@ -602,15 +598,18 @@
       btn.disabled = !(keptCards.length === 2 && discardedCard !== null);
     }
 
-    // 第四階段：祈願收尾
+    // 第四階段：純制式化客觀祈願收尾 (去個案化、客觀莊嚴)
     function goToBlessingScreen() {
       document.getElementById('summary-keep').innerText = keptCards.join('、');
       document.getElementById('summary-discard').innerText = discardedCard;
 
       const prayerElem = document.getElementById('prayer-content');
       prayerElem.innerHTML = `
-        願你裝入行囊的<strong>「${keptCards[0]}」</strong>與<strong>「${keptCards[1]}」</strong>，化為你跨越當前時區的踏實底氣；<br><br>
-        願你今天留在這張桌上的<strong>「${discardedCard}」</strong>，不再折磨你明天醒來的清晨。
+        旅途漫長，行囊空間終究有限。<br><br>
+        願你此刻親手收進背包的<strong>「${keptCards[0]}」</strong>與<strong>「${keptCards[1]}」</strong>，<br>
+        化為你跨越當前時區、踏實前行的底氣；<br><br>
+        願你今天決心留在這張桌上的<strong>「${discardedCard}」</strong>，<br>
+        成為不再回頭的止損點，不再綁架明天清晨醒來的時鐘。
       `;
 
       showScreen('screen-step4');
