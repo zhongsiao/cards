@@ -8,13 +8,13 @@
     :root {
       --bg-color: #F7F5F0;
       --card-bg: #FFFFFF;
-      --card-border: #E5E0D8;
+      --card-border: #E2DDD5;
       --text-main: #2A2A2A;
       --text-muted: #7A756D;
       --accent: #B85D43;
       --accent-soft: #F4EBE7;
-      --discard-color: #736B66;
-      --staging-bg: #EDE9E3;
+      --discard-color: #6E6762;
+      --staging-bg: #ECE7E0;
     }
 
     * {
@@ -24,87 +24,121 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    body {
+    html, body {
+      width: 100%;
+      height: 100%;
+      height: 100dvh; /* 動態視窗高度，徹底杜絕滑動 */
+      max-height: 100dvh;
+      overflow: hidden; /* 強制消除滾動條 */
       background-color: var(--bg-color);
       color: var(--text-main);
       font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Serif TC", "Microsoft JhengHei", serif;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: flex-start; /* 徹底消除底部多餘空白 */
-      align-items: center;
-      padding: 18px 14px 40px;
-      line-height: 1.45;
+      line-height: 1.35;
     }
 
     .container {
       width: 100%;
-      max-width: 480px;
+      max-width: 440px;
+      height: 100%;
       margin: 0 auto;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
     }
 
     .screen {
       display: none;
-      opacity: 0;
-      transition: opacity 0.2s ease;
+      height: 100%;
       width: 100%;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .screen.active {
-      display: block;
-      opacity: 1;
+      display: flex;
     }
 
-    /* 頂部標題 */
+    /* 頂部標頭 */
+    .header-box {
+      text-align: center;
+      margin-bottom: 6px;
+      flex-shrink: 0;
+    }
+
     .header-tag {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       letter-spacing: 0.15em;
       color: var(--text-muted);
-      text-align: center;
-      margin-bottom: 4px;
       text-transform: uppercase;
     }
 
     .header-title {
-      font-size: 1.25rem;
+      font-size: 1.08rem;
       font-weight: 600;
-      text-align: center;
       color: var(--text-main);
-      margin-bottom: 16px;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.03em;
+      margin-top: 1px;
     }
 
-    /* 第一階段：六維選擇 */
+    /* 按鈕共用 */
+    .btn {
+      width: 100%;
+      background: var(--accent);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 26px;
+      padding: 12px 16px;
+      font-size: 1rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      cursor: pointer;
+      flex-shrink: 0;
+      box-shadow: 0 3px 10px rgba(184, 93, 67, 0.2);
+    }
+
+    .btn:disabled {
+      background: #D8D2C9;
+      color: #8C857B;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    /* 第一階段 */
+    .stage1-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 10px;
+      flex: 1;
+    }
+
     .section-label {
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-weight: 600;
       color: var(--accent);
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
 
     .card-row {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
-      margin-bottom: 18px;
+      gap: 6px;
     }
 
     .choice-card {
       background: var(--card-bg);
       border: 1.5px solid var(--card-border);
-      border-radius: 10px;
-      padding: 16px 4px;
+      border-radius: 8px;
+      padding: 12px 2px;
       text-align: center;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 500;
       color: var(--text-main);
       cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-      transition: all 0.15s ease;
+      min-height: 64px;
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: 72px;
     }
 
     .choice-card.selected {
@@ -112,313 +146,211 @@
       background-color: var(--accent-soft);
       color: var(--accent);
       font-weight: 600;
-      transform: translateY(-2px);
-      box-shadow: 0 4px 10px rgba(184, 93, 67, 0.12);
     }
 
-    /* 按鈕共用樣式 */
-    .btn {
-      width: 100%;
-      background: var(--accent);
-      color: #FFFFFF;
-      border: none;
-      border-radius: 30px;
-      padding: 14px 20px;
-      font-size: 1.05rem;
-      font-weight: 500;
-      letter-spacing: 0.06em;
-      cursor: pointer;
-      transition: opacity 0.2s ease, transform 0.1s ease;
-      box-shadow: 0 4px 12px rgba(184, 93, 67, 0.2);
-      margin-top: 10px;
-    }
-
-    .btn:disabled {
-      background: var(--card-border);
-      color: var(--text-muted);
-      box-shadow: none;
-      cursor: not-allowed;
-    }
-
-    .btn:active:not(:disabled) {
-      transform: scale(0.98);
-    }
-
-    /* 第二階段：大字展示 */
-    .story-focus-wrap {
-      text-align: center;
-      padding: 20px 8px;
-    }
-
-    .story-meta-label {
-      font-size: 0.9rem;
-      letter-spacing: 0.15em;
-      color: var(--accent);
-      margin-bottom: 18px;
-    }
-
-    .story-big-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      margin-bottom: 26px;
-    }
-
-    .story-card-box {
-      background: var(--card-bg);
-      border-radius: 14px;
-      border: 1px solid var(--card-border);
-      padding: 18px 16px;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.02);
-    }
-
-    .story-card-type {
-      font-size: 0.8rem;
-      color: var(--text-muted);
-      margin-bottom: 4px;
-    }
-
-    .story-card-title {
-      font-size: 1.7rem;
-      font-weight: 700;
-      color: var(--text-main);
-    }
-
-    .story-recording-hint {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      margin-bottom: 24px;
-      line-height: 1.7;
-    }
-
-    /* 第三階段：五大分類超顯眼設計（無滑動、高辨識） */
-    .category-section-title {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 8px;
-      display: flex;
-      justify-content: space-between;
-    }
-
-    .category-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 6px;
-      margin-bottom: 14px;
-    }
-
-    .category-btn {
-      background: var(--card-bg);
-      border: 1.5px solid var(--card-border);
-      border-radius: 10px;
-      padding: 8px 4px;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.15s ease;
+    /* 第二階段 */
+    .stage2-body {
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      min-height: 52px;
-    }
-
-    .category-btn .cat-title {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-main);
-    }
-
-    .category-btn .cat-sub {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-      margin-top: 2px;
-    }
-
-    .category-btn.active {
-      background: var(--text-main);
-      border-color: var(--text-main);
-    }
-
-    .category-btn.active .cat-title,
-    .category-btn.active .cat-sub {
-      color: #FFFFFF;
-    }
-
-    /* 副卡清單：徹底廢止內部滾動條，全部直接展開 */
-    .pool-wrapper {
-      margin-bottom: 16px;
-    }
-
-    .pool-label {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--accent);
-      margin-bottom: 8px;
-    }
-
-    .selection-pool {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      /* 關鍵：絕不用 overflow-y: auto 或 max-height */
-    }
-
-    .pool-item {
-      background: var(--card-bg);
-      border: 1.5px solid var(--card-border);
-      border-radius: 10px;
-      padding: 11px 14px;
-      font-size: 0.95rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      min-height: 48px;
-    }
-
-    .pool-item.staged {
-      background: #EBE6DF;
-      border-color: #D3CBC2;
-      color: var(--text-muted);
-    }
-
-    .pool-item .action-icon {
-      font-size: 0.8rem;
-      font-weight: 600;
-      color: var(--accent);
-      padding: 3px 8px;
-      border-radius: 14px;
-      background: var(--accent-soft);
-    }
-
-    .pool-item.staged .action-icon {
-      background: #DDD7CF;
-      color: var(--text-muted);
-    }
-
-    /* 底部常駐暫存托盤 (緊湊無冗餘空白) */
-    .staging-dock {
-      background: var(--staging-bg);
-      border-radius: 12px;
-      padding: 12px;
-      margin-bottom: 12px;
-      border: 1.5px dashed #D0C8BD;
-    }
-
-    .staging-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 8px;
-    }
-
-    .staging-title {
-      font-size: 0.85rem;
-      font-weight: 600;
-      color: var(--text-main);
-    }
-
-    .staging-count {
-      font-size: 0.8rem;
-      color: var(--accent);
-      font-weight: 600;
-    }
-
-    .staging-list {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .staging-item {
-      background: var(--card-bg);
-      border: 1.5px solid var(--card-border);
-      border-radius: 8px;
-      padding: 9px 12px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      font-size: 0.88rem;
-      transition: all 0.15s ease;
-    }
-
-    .staging-item .status-badge {
-      font-size: 0.75rem;
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-weight: 500;
-      background: #EFECE6;
-      color: var(--text-muted);
-    }
-
-    .staging-item.keep {
-      border-color: var(--accent);
-      background: var(--accent-soft);
-    }
-    .staging-item.keep .status-badge {
-      background: var(--accent);
-      color: #FFFFFF;
-    }
-
-    .staging-item.discard {
-      border-color: var(--discard-color);
-      background: #E2DDD7;
-    }
-    .staging-item.discard .status-badge {
-      background: var(--discard-color);
-      color: #FFFFFF;
-    }
-
-    /* 第四階段：祈願收尾 */
-    .blessing-box {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 16px;
-      padding: 28px 18px;
+      flex: 1;
       text-align: center;
-      margin-bottom: 20px;
-      box-shadow: 0 3px 12px rgba(0,0,0,0.02);
+      gap: 14px;
     }
 
-    .blessing-title {
-      font-size: 1rem;
-      letter-spacing: 0.12em;
-      color: var(--text-muted);
-      margin-bottom: 18px;
+    .story-big-box {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 12px;
+      padding: 16px;
     }
 
-    .summary-block {
-      text-align: left;
-      margin-bottom: 14px;
-      padding-bottom: 12px;
-      border-bottom: 1px dashed var(--card-border);
-    }
-
-    .summary-label {
-      font-size: 0.8rem;
+    .story-big-box .label {
+      font-size: 0.78rem;
       color: var(--text-muted);
       margin-bottom: 4px;
     }
 
-    .summary-value {
-      font-size: 1rem;
-      font-weight: 600;
+    .story-big-box .val {
+      font-size: 1.6rem;
+      font-weight: 700;
       color: var(--text-main);
     }
 
-    .prayer-container {
-      margin-top: 18px;
+    /* 第三階段：全緊湊一屏核心佈局 */
+    .stage3-main {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      flex: 1;
+      overflow: hidden;
+      margin-bottom: 6px;
     }
 
-    .prayer-text {
-      font-size: 1.05rem;
-      font-weight: 500;
+    /* 五大分類單行 5 欄網格 */
+    .category-row-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px;
+      margin-bottom: 6px;
+      flex-shrink: 0;
+    }
+
+    .category-tab {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 6px 1px;
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      text-align: center;
+      cursor: pointer;
+      line-height: 1.2;
+    }
+
+    .category-tab.active {
+      background: var(--text-main);
+      color: #FFFFFF;
+      border-color: var(--text-main);
+      font-weight: 600;
+    }
+
+    /* 當前分類 5 張牌緊緻清單 */
+    .pool-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex-shrink: 0;
+    }
+
+    .pool-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      padding: 7px 10px;
+      font-size: 0.86rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      min-height: 38px;
+    }
+
+    .pool-card.staged {
+      background: #E8E3DC;
+      border-color: #CCC4BA;
+      color: var(--text-muted);
+    }
+
+    .pool-card .action-tag {
+      font-size: 0.72rem;
+      font-weight: 600;
       color: var(--accent);
-      line-height: 1.8;
-      letter-spacing: 0.03em;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: var(--accent-soft);
+      white-space: nowrap;
+      margin-left: 6px;
+    }
+
+    .pool-card.staged .action-tag {
+      background: #DDD7CE;
+      color: #7A756D;
+    }
+
+    /* 緊湊型膠囊候選盤 (Staging Dock) */
+    .staging-box {
+      background: var(--staging-bg);
+      border: 1.2px dashed #C8C0B4;
+      border-radius: 10px;
+      padding: 6px 8px;
+      margin-top: 6px;
+      flex-shrink: 0;
+    }
+
+    .staging-header-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.74rem;
+      margin-bottom: 4px;
+      font-weight: 600;
+    }
+
+    .staging-chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      min-height: 48px;
+      align-items: flex-start;
+      align-content: flex-start;
+    }
+
+    .chip-item {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 6px;
+      padding: 4px 6px;
+      font-size: 0.73rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+    }
+
+    .chip-item.keep {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .chip-item.discard {
+      border-color: var(--discard-color);
+      background: #DFDAD3;
+      color: var(--discard-color);
+      font-weight: 600;
+    }
+
+    .chip-badge {
+      font-size: 0.65rem;
+      padding: 1px 4px;
+      border-radius: 4px;
+      background: #EAE6DE;
+      color: var(--text-muted);
+    }
+
+    .chip-item.keep .chip-badge {
+      background: var(--accent);
+      color: #FFFFFF;
+    }
+
+    .chip-item.discard .chip-badge {
+      background: var(--discard-color);
+      color: #FFFFFF;
+    }
+
+    /* 第四階段 */
+    .stage4-body {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex: 1;
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 12px;
+      padding: 20px 14px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    .summary-text-row {
+      text-align: left;
+      margin-bottom: 10px;
+      padding-bottom: 8px;
+      border-bottom: 1px dashed var(--card-border);
+      font-size: 0.9rem;
     }
   </style>
 </head>
@@ -426,101 +358,90 @@
 
   <div class="container">
     
-    <!-- 第一階段：嚴格上下各選一 -->
+    <!-- 第一階段：上下分流 -->
     <div id="screen-step1" class="screen active">
-      <div class="header-tag">生命坐標・序幕</div>
-      <div class="header-title">請閉上眼，在上下兩組中各翻開一張牌</div>
-
-      <div class="section-label">✦ 橫軸：時空維度（擇一）</div>
-      <div class="card-row" id="row-top">
-        <div class="choice-card" onclick="selectTop(this, '過去')">過去</div>
-        <div class="choice-card" onclick="selectTop(this, '現在')">現在</div>
-        <div class="choice-card" onclick="selectTop(this, '未來')">未來</div>
+      <div class="header-box">
+        <div class="header-tag">生命坐標・序幕</div>
+        <div class="header-title">上下兩組各翻開一張牌</div>
       </div>
 
-      <div class="section-label">✦ 縱軸：心性試煉（擇一）</div>
-      <div class="card-row" id="row-bottom">
-        <div class="choice-card" onclick="selectBottom(this, '最滿意的事')">最滿意的事</div>
-        <div class="choice-card" onclick="selectBottom(this, '最大的困難')">最大的困難</div>
-        <div class="choice-card" onclick="selectBottom(this, '最想做的事')">最想做的事</div>
+      <div class="stage1-body">
+        <div>
+          <div class="section-label">✦ 橫軸：時空維度（擇一）</div>
+          <div class="card-row" id="row-top">
+            <div class="choice-card" onclick="selectTop(this, '過去')">過去</div>
+            <div class="choice-card" onclick="selectTop(this, '現在')">現在</div>
+            <div class="choice-card" onclick="selectTop(this, '未來')">未來</div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-label">✦ 縱軸：心性焦點（擇一）</div>
+          <div class="card-row" id="row-bottom">
+            <div class="choice-card" onclick="selectBottom(this, '最滿意的事')">最滿意的事</div>
+            <div class="choice-card" onclick="selectBottom(this, '最大的困難')">最大的困難</div>
+            <div class="choice-card" onclick="selectBottom(this, '最想做的事')">最想做的事</div>
+          </div>
+        </div>
       </div>
 
       <button id="btn-start-story" class="btn" disabled onclick="goToStoryScreen()">開牌・故事開始</button>
     </div>
 
-    <!-- 第二階段：大字展示 -->
+    <!-- 第二階段：大字看板 -->
     <div id="screen-step2" class="screen">
-      <div class="story-focus-wrap">
-        <div class="story-meta-label">✦ 故事開始・傾聽中 ✦</div>
-        
-        <div class="story-big-cards">
-          <div class="story-card-box">
-            <div class="story-card-type">當前的時空時區</div>
-            <div class="story-card-title" id="display-top-card">——</div>
-          </div>
-          <div class="story-card-box">
-            <div class="story-card-type">核心試煉坐標</div>
-            <div class="story-card-title" id="display-bottom-card">——</div>
-          </div>
-        </div>
-
-        <div class="story-recording-hint">
-          （ 此刻已開啟獨立錄音 ）<br>
-          請像朋友喝茶般，不帶預設立場地專注傾聽
-        </div>
-
-        <button class="btn" onclick="goToTradeoffScreen()">故事結束・整理行囊</button>
+      <div class="header-box">
+        <div class="header-tag">✦ 故事傾聽中 ✦</div>
+        <div class="header-title">專注當下的生命敘事</div>
       </div>
+
+      <div class="stage2-body">
+        <div class="story-big-box">
+          <div class="label">當前時空</div>
+          <div class="val" id="display-top-card">——</div>
+        </div>
+        <div class="story-big-box">
+          <div class="label">核心試煉</div>
+          <div class="val" id="display-bottom-card">——</div>
+        </div>
+        <div style="font-size:0.82rem; color:var(--text-muted);">
+          （ 獨立錄音進行中，保持眼神交流與純粹傾聽 ）
+        </div>
+      </div>
+
+      <button class="btn" onclick="goToTradeoffScreen()">故事結束・整理行囊</button>
     </div>
 
-    <!-- 第三階段：五大分類顯眼平鋪 ＋ 副卡零滾動展開 ＋ 緊湊暫存盤 -->
+    <!-- 第三階段：單屏零滾動交割面板 -->
     <div id="screen-step3" class="screen">
-      <div class="header-tag">尾聲交割・斷捨離</div>
-      <div class="header-title">挑出 4–6 張放進候選盤，再做二留一捨</div>
-
-      <!-- 5大分類超顯眼網格按鈕 (帶有白話子標籤) -->
-      <div class="category-section-title">
-        <span>選擇人性面向：</span>
-        <span style="color:var(--accent);">點選切換分類</span>
-      </div>
-      <div class="category-grid">
-        <div class="category-btn active" onclick="switchCategory('A', this)">
-          <div class="cat-title">自主與動機</div>
-          <div class="cat-sub">節奏 / 期待</div>
-        </div>
-        <div class="category-btn" onclick="switchCategory('B', this)">
-          <div class="cat-title">面具與防衛</div>
-          <div class="cat-sub">體面 / 脆弱</div>
-        </div>
-        <div class="category-btn" onclick="switchCategory('C', this)">
-          <div class="cat-title">邊界與課題</div>
-          <div class="cat-sub">討好 / 介入</div>
-        </div>
-        <div class="category-btn" onclick="switchCategory('D', this)">
-          <div class="cat-title">損失與權衡</div>
-          <div class="cat-sub">安穩 / 沉沒</div>
-        </div>
-        <div class="category-btn" onclick="switchCategory('E', this)">
-          <div class="cat-title">存在與意義</div>
-          <div class="cat-sub">空虛 / 體驗</div>
-        </div>
+      <div class="header-box">
+        <div class="header-tag">尾聲交割・斷捨離</div>
+        <div class="header-title">選 4–6 張入盤，再做二留一捨</div>
       </div>
 
-      <!-- 當前分類的 5 張牌：直接完全展開，絕不滾動 -->
-      <div class="pool-wrapper">
-        <div class="pool-label" id="current-pool-label">✦ 點選卡片加入下方候選盤：</div>
-        <div class="selection-pool" id="pool-container"></div>
-      </div>
-
-      <!-- 緊湊型候選暫存托盤 (Staging Dock) -->
-      <div class="staging-dock">
-        <div class="staging-header">
-          <span class="staging-title">🎒 行囊候選盤（點卡片切換：留 / 捨）</span>
-          <span class="staging-count" id="staging-counter">0 / 4-6 張</span>
+      <div class="stage3-main">
+        <!-- 5大分類單行全展開 -->
+        <div class="category-row-grid">
+          <div class="category-tab active" onclick="switchCategory('A', this)">自主動機</div>
+          <div class="category-tab" onclick="switchCategory('B', this)">面具防衛</div>
+          <div class="category-tab" onclick="switchCategory('C', this)">邊界課題</div>
+          <div class="category-tab" onclick="switchCategory('D', this)">損失權衡</div>
+          <div class="category-tab" onclick="switchCategory('E', this)">存在意義</div>
         </div>
-        <div class="staging-list" id="staging-container">
-          <div style="font-size:0.8rem; color:var(--text-muted); text-align:center; padding:8px;">
-            由上方點選有共鳴的牌放入盤中
+
+        <!-- 5張副卡緊緻列出 (零內部滑動) -->
+        <div class="pool-list" id="pool-container"></div>
+
+        <!-- 候選盤膠囊托盤 -->
+        <div class="staging-box">
+          <div class="staging-header-row">
+            <span>🎒 行囊盤（點擊卡片切換：留 / 捨）</span>
+            <span id="staging-counter" style="color:var(--accent);">0 / 4-6 張</span>
+          </div>
+          <div class="staging-chips" id="staging-container">
+            <div style="font-size:0.75rem; color:var(--text-muted); padding:4px;">
+              由上方挑選 4–6 張有共鳴的牌放入
+            </div>
           </div>
         </div>
       </div>
@@ -528,41 +449,37 @@
       <button id="btn-confirm-tradeoff" class="btn" disabled onclick="goToBlessingScreen()">確認行囊・交付祝福</button>
     </div>
 
-    <!-- 第四階段：純客觀制式祈願收尾 -->
+    <!-- 第四階段：客觀祈願收尾 -->
     <div id="screen-step4" class="screen">
-      <div class="header-tag">前行・微光銘記</div>
-      
-      <div class="blessing-box">
-        <div class="blessing-title">✦ 人生行囊交割完成 ✦</div>
-
-        <div class="summary-block">
-          <div class="summary-label">裝進背包帶走的底牌（留）：</div>
-          <div class="summary-value" id="summary-keep">——</div>
-        </div>
-
-        <div class="summary-block">
-          <div class="summary-label">親手留在桌上的包袱（捨）：</div>
-          <div class="summary-value" style="color: var(--discard-color);" id="summary-discard">——</div>
-        </div>
-
-        <div class="prayer-container">
-          <div class="prayer-text" id="prayer-content"></div>
-        </div>
+      <div class="header-box">
+        <div class="header-tag">前行・銘刻</div>
+        <div class="header-title">✦ 人生行囊交割完成 ✦</div>
       </div>
 
-      <button class="btn" onclick="resetFlow()">完成訪談・開始新旅程</button>
+      <div class="stage4-body">
+        <div class="summary-text-row">
+          <div style="font-size:0.78rem; color:var(--text-muted);">收進行囊帶走（留）：</div>
+          <div style="font-weight:600; color:var(--text-main);" id="summary-keep">——</div>
+        </div>
+        <div class="summary-text-row">
+          <div style="font-size:0.78rem; color:var(--text-muted);">留在桌上不帶走（捨）：</div>
+          <div style="font-weight:600; color:var(--discard-color);" id="summary-discard">——</div>
+        </div>
+        <div style="font-size:0.95rem; color:var(--accent); line-height:1.7; margin-top:10px;" id="prayer-content"></div>
+      </div>
+
+      <button class="btn" onclick="resetFlow()">完成訪談・重置體驗</button>
     </div>
 
   </div>
 
   <script>
-    // 狀態存儲
     let selectedTopCard = null;
     let selectedBottomCard = null;
     let currentCategory = 'A';
     let stagedItems = [];
 
-    // 五大經典心理學卡牌資料庫
+    // 五大心理學卡牌資料庫
     const cardDatabase = {
       'A': [
         '掌控生活節奏的自主權',
@@ -601,53 +518,44 @@
       ]
     };
 
-    // 第一階段
     function selectTop(el, name) {
       document.querySelectorAll('#row-top .choice-card').forEach(c => c.classList.remove('selected'));
       selectedTopCard = (selectedTopCard === name) ? null : name;
       if (selectedTopCard) el.classList.add('selected');
-      checkStage1();
+      document.getElementById('btn-start-story').disabled = !(selectedTopCard && selectedBottomCard);
     }
 
     function selectBottom(el, name) {
       document.querySelectorAll('#row-bottom .choice-card').forEach(c => c.classList.remove('selected'));
       selectedBottomCard = (selectedBottomCard === name) ? null : name;
       if (selectedBottomCard) el.classList.add('selected');
-      checkStage1();
-    }
-
-    function checkStage1() {
       document.getElementById('btn-start-story').disabled = !(selectedTopCard && selectedBottomCard);
     }
 
     function showScreen(id) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
-      window.scrollTo(0, 0);
     }
 
-    // 第二階段
     function goToStoryScreen() {
       document.getElementById('display-top-card').innerText = selectedTopCard;
       document.getElementById('display-bottom-card').innerText = selectedBottomCard;
       showScreen('screen-step2');
     }
 
-    // 第三階段
     function goToTradeoffScreen() {
       renderPool();
       renderStaging();
       showScreen('screen-step3');
     }
 
-    function switchCategory(catKey, btn) {
+    function switchCategory(catKey, tabEl) {
       currentCategory = catKey;
-      document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
+      document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+      tabEl.classList.add('active');
       renderPool();
     }
 
-    // 渲染上方 5 張牌：直接完整列出，不設滾動條
     function renderPool() {
       const container = document.getElementById('pool-container');
       container.innerHTML = '';
@@ -656,24 +564,23 @@
       cards.forEach(cardText => {
         const isStaged = stagedItems.some(item => item.text === cardText);
         const div = document.createElement('div');
-        div.className = 'pool-item' + (isStaged ? ' staged' : '');
+        div.className = 'pool-card' + (isStaged ? ' staged' : '');
         div.innerHTML = `
           <span>${cardText}</span>
-          <span class="action-icon">${isStaged ? '✓ 已入盤' : '＋ 放入'}</span>
+          <span class="action-tag">${isStaged ? '已入盤' : '＋加入'}</span>
         `;
         div.onclick = () => toggleStageItem(cardText);
         container.appendChild(div);
       });
     }
 
-    // 點擊卡片：加入或移出暫存盤
     function toggleStageItem(cardText) {
       const index = stagedItems.findIndex(item => item.text === cardText);
       if (index > -1) {
         stagedItems.splice(index, 1);
       } else {
         if (stagedItems.length >= 6) {
-          alert('候選盤上限為 6 張，請先點擊下方盤內卡片做取捨。');
+          alert('候選盤上限 6 張，請直接點擊下方卡片做二留一捨。');
           return;
         }
         stagedItems.push({ text: cardText, state: 'staged' });
@@ -682,7 +589,6 @@
       renderStaging();
     }
 
-    // 渲染下方暫存盤
     function renderStaging() {
       const container = document.getElementById('staging-container');
       const counter = document.getElementById('staging-counter');
@@ -690,8 +596,8 @@
 
       if (stagedItems.length === 0) {
         container.innerHTML = `
-          <div style="font-size:0.8rem; color:var(--text-muted); text-align:center; padding:8px;">
-            由上方點選 4–6 張有共鳴的牌放入盤中
+          <div style="font-size:0.74rem; color:var(--text-muted); padding:4px;">
+            由上方挑選 4–6 張有共鳴的牌放入
           </div>
         `;
         checkConfirmBtn();
@@ -701,43 +607,35 @@
       container.innerHTML = '';
       stagedItems.forEach((item, idx) => {
         const div = document.createElement('div');
-        div.className = 'staging-item ' + (item.state !== 'staged' ? item.state : '');
+        div.className = 'chip-item ' + (item.state !== 'staged' ? item.state : '');
         
-        let badgeText = '候選中';
-        if (item.state === 'keep') badgeText = '帶走 (留)';
-        if (item.state === 'discard') badgeText = '丟棄 (捨)';
+        let badge = '候選';
+        if (item.state === 'keep') badge = '留';
+        if (item.state === 'discard') badge = '捨';
 
         div.innerHTML = `
           <span>${item.text}</span>
-          <span class="status-badge">${badgeText}</span>
+          <span class="chip-badge">${badge}</span>
         `;
-        div.onclick = () => cycleItemDecision(idx);
+        div.onclick = () => cycleDecision(idx);
         container.appendChild(div);
       });
 
       checkConfirmBtn();
     }
 
-    // 點擊暫存盤內卡片循環切換狀態
-    function cycleItemDecision(index) {
+    function cycleDecision(index) {
       const current = stagedItems[index].state;
       const keepCount = stagedItems.filter(i => i.state === 'keep').length;
       const discardCount = stagedItems.filter(i => i.state === 'discard').length;
 
       if (current === 'staged') {
-        if (keepCount < 2) {
-          stagedItems[index].state = 'keep';
-        } else if (discardCount < 1) {
-          stagedItems[index].state = 'discard';
-        } else {
-          stagedItems[index].state = 'staged';
-        }
+        if (keepCount < 2) stagedItems[index].state = 'keep';
+        else if (discardCount < 1) stagedItems[index].state = 'discard';
+        else stagedItems[index].state = 'staged';
       } else if (current === 'keep') {
-        if (discardCount < 1) {
-          stagedItems[index].state = 'discard';
-        } else {
-          stagedItems[index].state = 'staged';
-        }
+        if (discardCount < 1) stagedItems[index].state = 'discard';
+        else stagedItems[index].state = 'staged';
       } else if (current === 'discard') {
         stagedItems[index].state = 'staged';
       }
@@ -745,17 +643,14 @@
       renderStaging();
     }
 
-    // 檢查確認按鈕：需滿 4-6 張，且恰好 2 留 1 捨
     function checkConfirmBtn() {
       const btn = document.getElementById('btn-confirm-tradeoff');
       const keepCount = stagedItems.filter(i => i.state === 'keep').length;
       const discardCount = stagedItems.filter(i => i.state === 'discard').length;
       const countValid = (stagedItems.length >= 4 && stagedItems.length <= 6);
-
       btn.disabled = !(countValid && keepCount === 2 && discardCount === 1);
     }
 
-    // 第四階段：純制式化客觀祈願收尾
     function goToBlessingScreen() {
       const kept = stagedItems.filter(i => i.state === 'keep').map(i => i.text);
       const discarded = stagedItems.find(i => i.state === 'discard').text;
@@ -765,7 +660,7 @@
 
       document.getElementById('prayer-content').innerHTML = `
         旅途漫長，行囊空間終究有限。<br><br>
-        願你從候選盤中親手收進背包的<strong>「${kept[0]}」</strong>與<strong>「${kept[1]}」</strong>，<br>
+        願你親手收進背包的<strong>「${kept[0]}」</strong>與<strong>「${kept[1]}」</strong>，<br>
         化為你跨越當前時區、踏實前行的底氣；<br><br>
         願你今天決心留在這張桌上的<strong>「${discarded}」</strong>，<br>
         成為不再回頭的止損點，不再綁架明天清晨醒來的時鐘。
@@ -774,7 +669,6 @@
       showScreen('screen-step4');
     }
 
-    // 重置所有流程
     function resetFlow() {
       selectedTopCard = null;
       selectedBottomCard = null;
