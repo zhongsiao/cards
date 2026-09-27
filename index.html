@@ -522,34 +522,6 @@
     .btn-secondary:active {
       transform: scale(0.97);
     }
-    .sheet-sync-box {
-      background: #FAF6ED;
-      border: 1.5px dashed #D6C7AA;
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-top: 6px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .sheet-sync-title {
-      font-size: 0.88rem;
-      font-weight: 800;
-      color: #6E5325;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .sheet-input {
-      width: 100%;
-      padding: 9px 12px;
-      border-radius: 8px;
-      border: 1px solid #CCC0A8;
-      font-size: 0.88rem;
-      background: #FFF;
-      box-sizing: border-box;
-      outline: none;
-    }
   </style>
 </head>
 <body>
@@ -695,18 +667,16 @@
       <div class="action-panel">
         <button type="button" class="btn-primary" onclick="copyFullPrayer()">📋 複製完整朗讀禱詞</button>
 
+        <button type="button" class="btn-primary" id="btn-sync-sheet" style="background:#1B5E20; box-shadow: 0 4px 14px rgba(27,94,32,0.25);" onclick="syncToGoogleSheet()">
+          ☁️ 一鍵存入 Google 雲端試算表
+        </button>
+        <div style="text-align:center; margin-top:-2px; margin-bottom:4px;">
+          <a href="https://docs.google.com/spreadsheets/d/1doZiE7MI7TM7OUJPCqklNviB9Sixy7KlqlPc_lQQXEw/edit" target="_blank" style="color:#6E685F; font-size:0.84rem; text-decoration:underline; font-weight:600;">📊 前往查看【局內人生命交割資料庫】試算表 ↗</a>
+        </div>
+
         <div class="btn-secondary-grid">
           <button type="button" class="btn-secondary" onclick="downloadTextFile()">📄 下載文字檔 (.txt)</button>
           <button type="button" class="btn-secondary" onclick="downloadCsvFile()">📊 下載試算表 (.csv)</button>
-        </div>
-
-        <div class="sheet-sync-box">
-          <div class="sheet-sync-title">
-            <span>☁️ 雲端試算表自動同步 (Google Sheets)</span>
-            <a href="https://docs.google.com/spreadsheets/d/1doZiE7MI7TM7OUJPCqklNviB9Sixy7KlqlPc_lQQXEw/edit" target="_blank" style="color:#8B4513; font-size:0.8rem; text-decoration:underline;">開啟資料庫 ↗</a>
-          </div>
-          <input type="text" class="sheet-input" id="gasWebhookUrl" placeholder="貼上 Google Apps Script Web App 網址..." onchange="saveGasUrl(this.value)">
-          <button type="button" class="btn-secondary" style="background:#5C554B; color:#FFF; border:none; padding:10px;" onclick="syncToGoogleSheet()">一鍵即時寫入雲端 Sheet</button>
         </div>
 
         <button type="button" class="btn-primary" style="background:#70695E; margin-top:4px;" onclick="restartAll()">🔄 重新整理開局</button>
@@ -716,4 +686,481 @@
   </div>
 
   <script>
-    let selectedTime = null
+    let selectedTime = null;
+    let selectedFocus = null;
+    let currentCategory = "自主與動機";
+
+    // 儲存狀態：'exclude' | 'take' | 'discard'
+    let selectedCandidates = new Map();
+
+    const cardsDB = {
+      "自主與動機": [
+        "掌控生活節奏的自主權",
+        "證明自身價值的勝任感",
+        "被群體接納的安全歸屬",
+        "滿足外界期待的責任包袱",
+        "追求自我實現的內在渴望",
+        "擺脫他人評價的自由意志"
+      ],
+      "面具與防衛": [
+        "看似無所謂的冷靜外衣",
+        "習慣報喜不報憂的堅強",
+        "凡事親力親為的控制欲",
+        "害怕被拒絕的討好迎合",
+        "停不下來的過度準備",
+        "預設最壞結果的過度防衛"
+      ],
+      "邊界與課題": [
+        "難以開口拒絕的人情負擔",
+        "替他人的人生課題背負責任",
+        "渴望親密卻又恐懼失去邊界",
+        "職場角色與真實自我的撕裂",
+        "家庭期待與個人志向的拉扯",
+        "守護個人心理空間的界線"
+      ],
+      "損失與權衡": [
+        "難以割捨的沉沒成本",
+        "害怕承擔選擇後的未知代價",
+        "放棄穩定換取未知的冒險",
+        "在 reality 生計與理想熱情間妥協",
+        "顧全大局而做出的自我退讓",
+        "過去挫折留下的隱性創傷"
+      ],
+      "存在與意義": [
+        "渴望被深度看見與認可",
+        "給予家庭與後輩的寄託",
+        "在有限生命中留下痕跡的期盼",
+        "面對生命不確定性的安住心念",
+        "歷經考驗後的自我和解",
+        "找到靈魂安身立命的錨點"
+      ]
+    };
+
+    const coordQuestions = {
+      "過去_最滿意的事": "「在那段時光裡，你做對了什麼，成為了支撐你至今的底氣？」",
+      "過去_最大的困難": "「當時最艱難的那道檻，你究竟是怎麼熬過來的？付出了什麼代價？」",
+      "過去_最想做的事": "「那些年曾熱烈想做卻擱置的事，如今在你心裡留下了什麼回聲？」",
+
+      "現在_最滿意的事": "「在當下的混亂或節奏中，最讓你感到踏實、值得慶幸的是哪一刻？」",
+      "現在_最大的困難": "「此刻卡在你喉嚨深處、最難以向外人啟齒的瓶頸是什麼？」",
+      "現在_最想做的事": "「如果卸下所有包袱與他人期待，此刻你最想全力為自己做什麼？」",
+
+      "未來_最滿意的事": "「想像幾年後的自己，你最希望看見自己守住了哪一份初心？」",
+      "未來_最大的困難": "「展望前路，你最害怕即將面臨的哪一種未知與失控？」",
+      "未來_最想做的事": "「在下一個生命篇章中，哪一個願景讓你哪怕害怕也願意啟程？」"
+    };
+
+    // ──────── 階段一：翻牌互動 ────────
+    function pickTime(val) {
+      selectedTime = val;
+      document.querySelectorAll('#grid-time .coord-card').forEach(btn => {
+        btn.classList.toggle('selected', btn.getAttribute('data-val') === val);
+      });
+      const badge = document.getElementById('badge-time');
+      badge.innerText = `✓ ${val}`;
+      badge.classList.add('done');
+      updateStep1UI();
+    }
+
+    function pickFocus(val) {
+      selectedFocus = val;
+      document.querySelectorAll('#grid-focus .coord-card').forEach(btn => {
+        btn.classList.toggle('selected', btn.getAttribute('data-val') === val);
+      });
+      const badge = document.getElementById('badge-focus');
+      badge.innerText = `✓ ${val}`;
+      badge.classList.add('done');
+      updateStep1UI();
+    }
+
+    document.querySelectorAll('#grid-time .coord-card').forEach(btn => {
+      btn.onclick = function() { pickTime(this.getAttribute('data-val')); };
+    });
+
+    document.querySelectorAll('#grid-focus .coord-card').forEach(btn => {
+      btn.onclick = function() { pickFocus(this.getAttribute('data-val')); };
+    });
+
+    function updateStep1UI() {
+      const btn = document.getElementById('btn-to-step2');
+      if (selectedTime && selectedFocus) {
+        btn.innerText = `開牌 · 故事開始（${selectedTime} × ${selectedFocus}）➔`;
+      } else if (selectedTime && !selectedFocus) {
+        btn.innerText = `已選【${selectedTime}】，點此隨機開焦點，或手動點選`;
+      } else if (!selectedTime && selectedFocus) {
+        btn.innerText = `已選【${selectedFocus}】，點此隨機開時空，或手動點選`;
+      } else {
+        btn.innerText = "開牌 · 故事開始（手選或點此隨機開牌）";
+      }
+    }
+
+    function handleStep1Click() {
+      const times = ['過去', '現在', '未來'];
+      const focuses = ['最滿意的事', '最大的困難', '最想做的事'];
+
+      if (!selectedTime) pickTime(times[Math.floor(Math.random() * times.length)]);
+      if (!selectedFocus) pickFocus(focuses[Math.floor(Math.random() * focuses.length)]);
+
+      setTimeout(() => { goToStep(2); }, 150);
+    }
+
+    // ──────── 頁面導航 ────────
+    function goToStep(stepNum) {
+      document.querySelectorAll('.step-view').forEach(v => v.classList.remove('active'));
+      const target = document.getElementById(`view-step${stepNum}`);
+      if (target) target.classList.add('active');
+
+      if (stepNum === 2) {
+        const coordKey = `${selectedTime}_${selectedFocus}`;
+        const qText = coordQuestions[coordKey] || "「在這個生命座標下，靜下心來，聊聊你最深處的體會。」";
+        document.getElementById('display-coord').innerText = `生命坐標：${selectedTime} × ${selectedFocus}`;
+        document.getElementById('display-question').innerText = qText;
+      } else if (stepNum === 3) {
+        renderCardsStep3();
+      } else if (stepNum === 4) {
+        renderReportAndPrayer();
+      }
+      window.scrollTo(0, 0);
+    }
+
+    // ──────── 階段三：初選 ────────
+    function switchCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(b => {
+        b.classList.toggle('active', b.innerText === cat);
+      });
+      renderCardsStep3();
+    }
+
+    function renderCardsStep3() {
+      const container = document.getElementById('cardListContainer');
+      container.innerHTML = "";
+      const list = cardsDB[currentCategory] || [];
+
+      list.forEach(title => {
+        const isSelected = selectedCandidates.has(title);
+        const row = document.createElement('div');
+        row.className = `card-row ${isSelected ? 'is-selected' : ''}`;
+        row.innerHTML = `
+          <span class="card-title">${title}</span>
+          <span class="card-badge">${isSelected ? '✓ 已入選' : '+ 加入'}</span>
+        `;
+        row.onclick = () => toggleSelectCandidate(title);
+        container.appendChild(row);
+      });
+
+      updateStep3Button();
+    }
+
+    function toggleSelectCandidate(title) {
+      if (selectedCandidates.has(title)) {
+        selectedCandidates.delete(title);
+      } else {
+        if (selectedCandidates.size >= 6) {
+          alert("最多挑選 6 張卡片進行終極抉擇喔！");
+          return;
+        }
+        selectedCandidates.set(title, 'exclude');
+      }
+      renderCardsStep3();
+    }
+
+    function updateStep3Button() {
+      const count = selectedCandidates.size;
+      const btn = document.getElementById('btn-to-decision');
+      if (count >= 3 && count <= 6) {
+        btn.innerText = `進入取捨 (已選 ${count} 張) ➔`;
+      } else {
+        btn.innerText = `進入取捨 (已選 ${count}/3-6 張，還差 ${Math.max(0, 3 - count)} 張)`;
+      }
+    }
+
+    function goToDecisionStep() {
+      const count = selectedCandidates.size;
+      if (count < 3 || count > 6) {
+        alert("請挑選 3 到 6 張有共鳴的卡片喔！");
+        return;
+      }
+
+      // 初始預設前 2 個取、第 3 個捨、其餘不納入
+      let idx = 0;
+      for (let [title] of selectedCandidates.entries()) {
+        if (idx === 0 || idx === 1) selectedCandidates.set(title, 'take');
+        else if (idx === 2) selectedCandidates.set(title, 'discard');
+        else selectedCandidates.set(title, 'exclude');
+        idx++;
+      }
+
+      document.querySelectorAll('.step-view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-decision').classList.add('active');
+      renderDecisionCards();
+      window.scrollTo(0, 0);
+    }
+
+    // ──────── 階段三・五：三檔切換（取二留一保證不卡死） ────────
+    function setCardStatusDirect(title, targetStatus) {
+      if (targetStatus === 'take') {
+        // 若已有 2 個 take，將最舊的一個 take 釋放為 exclude
+        let existingTakes = [];
+        selectedCandidates.forEach((st, k) => {
+          if (k !== title && st === 'take') existingTakes.push(k);
+        });
+        if (existingTakes.length >= 2) {
+          selectedCandidates.set(existingTakes[0], 'exclude');
+        }
+        selectedCandidates.set(title, 'take');
+      } else if (targetStatus === 'discard') {
+        // 若已有 1 個 discard，將舊的釋放為 exclude
+        selectedCandidates.forEach((st, k) => {
+          if (k !== title && st === 'discard') {
+            selectedCandidates.set(k, 'exclude');
+          }
+        });
+        selectedCandidates.set(title, 'discard');
+      } else {
+        selectedCandidates.set(title, 'exclude');
+      }
+
+      renderDecisionCards();
+    }
+
+    // 點擊整張卡片：三檔循環 (不納入 ➔ 取 ➔ 捨 ➔ 不納入)
+    function cycleCardStatus(title) {
+      const current = selectedCandidates.get(title) || 'exclude';
+      if (current === 'exclude') {
+        let takeCount = 0, discardCount = 0;
+        selectedCandidates.forEach(st => {
+          if (st === 'take') takeCount++;
+          if (st === 'discard') discardCount++;
+        });
+        if (takeCount >= 2 && discardCount === 0) {
+          setCardStatusDirect(title, 'discard');
+        } else {
+          setCardStatusDirect(title, 'take');
+        }
+      } else if (current === 'take') {
+        setCardStatusDirect(title, 'discard');
+      } else if (current === 'discard') {
+        setCardStatusDirect(title, 'exclude');
+      }
+    }
+
+    function renderDecisionCards() {
+      const container = document.getElementById('decisionListContainer');
+      container.innerHTML = "";
+
+      let takeCount = 0, discardCount = 0;
+      let takeIndexMap = new Map();
+
+      selectedCandidates.forEach((status, title) => {
+        if (status === 'take') {
+          takeCount++;
+          takeIndexMap.set(title, takeCount);
+        }
+        if (status === 'discard') discardCount++;
+      });
+
+      selectedCandidates.forEach((status, title) => {
+        const card = document.createElement('div');
+        card.className = `decision-card status-${status}`;
+
+        card.onclick = (e) => {
+          if (e.target.tagName.toLowerCase() === 'button') return;
+          cycleCardStatus(title);
+        };
+
+        const isTake = (status === 'take');
+        const isDiscard = (status === 'discard');
+        const isExclude = (status === 'exclude');
+        const takeLabel = isTake ? `🌿 取 ${takeIndexMap.get(title)}` : '🌿 取';
+
+        card.innerHTML = `
+          <div class="decision-title">${title}</div>
+          <div class="seg-group">
+            <button type="button" class="seg-btn ${isTake ? 'active-take' : ''}" onclick="setCardStatusDirect('${title}', 'take')">${takeLabel}</button>
+            <button type="button" class="seg-btn ${isDiscard ? 'active-discard' : ''}" onclick="setCardStatusDirect('${title}', 'discard')">🕊️ 捨</button>
+            <button type="button" class="seg-btn ${isExclude ? 'active-exclude' : ''}" onclick="setCardStatusDirect('${title}', 'exclude')">⚪ 留白</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      const confirmBtn = document.getElementById('btn-to-step4');
+      const isValid = (takeCount === 2 && discardCount === 1);
+      if (isValid) {
+        confirmBtn.innerText = "確認行囊 · 交付祝福（二留一捨）➔";
+      } else {
+        confirmBtn.innerText = `請點選為「二取一捨」(目前 取:${takeCount}/2 捨:${discardCount}/1)`;
+      }
+    }
+
+    function handleDecisionSubmit() {
+      let takeCount = 0, discardCount = 0;
+      selectedCandidates.forEach(st => {
+        if (st === 'take') takeCount++;
+        if (st === 'discard') discardCount++;
+      });
+
+      if (takeCount !== 2 || discardCount !== 1) {
+        alert("請調整為剛好 2 個帶走（取）與 1 個放下（捨）喔！");
+        return;
+      }
+      goToStep(4);
+    }
+
+    // ──────── 階段四：完全可朗讀的生命禱詞生成 ────────
+    let currentPrayerFullText = "";
+    let currentRecordObj = {};
+
+    function renderReportAndPrayer() {
+      document.getElementById('reportCoordTitle').innerText = `生命坐標：${selectedTime} × ${selectedFocus}`;
+
+      let takes = [];
+      let discard = "";
+
+      selectedCandidates.forEach((status, title) => {
+        if (status === 'take') takes.push(title);
+        if (status === 'discard') discard = title;
+      });
+
+      const t1 = takes[0] || "心靈的寧靜";
+      const t2 = takes || "向前的勇氣";
+      const disc = discard || "舊日的負擔";
+
+      let timeProse = "";
+      if (selectedTime === "過去") {
+        timeProse = `回望那些走過的歲月，面對記憶深處的「${selectedFocus}」——生命曾賦予你磨礪，也曾在那裡悄悄埋下了屬於你的光芒。`;
+      } else if (selectedTime === "現在") {
+        timeProse = `立足於此時此刻的當下，面對真實觸及的「${selectedFocus}」——你在喧囂的日常之中，終於看清了靈魂深處最在乎的重量。`;
+      } else {
+        timeProse = `凝視前方嶄新的長路，面對即將展開的「${selectedFocus}」——未知的風景正等待著你，以最純粹的心境親手鋪展。`;
+      }
+
+      const container = document.getElementById('spokenPrayerText');
+      container.innerHTML = `
+        <p>親愛的局內人，在此刻的時空裡，我們一同見證這場生命的對話與交割。</p>
+        <p>${timeProse}</p>
+        <p>
+          今天，在此刻的沉澱之中，我們首先向<span class="prayer-spotlight">「${disc}」</span>深深致謝。<br>
+          長久以來，它曾是你對抗風雨、抵擋失控的沉重鎧甲；但在此刻，它的守護使命已經圓滿。請容許自己溫柔地將它卸下、安放於歲月深處，感謝它一路以來的相伴，從今而後，不再受其牽絆。
+        </p>
+        <p>
+          同時，請你敞開雙手，珍重地接納屬於你的真實底氣——<br>
+          <span class="prayer-spotlight">「${t1}」</span>，以及<span class="prayer-spotlight">「${t2}」</span>。<br>
+          這不是沉重的包袱，而是你在千百思緒中淘洗出的黃金，是你穿透迷霧、安身立命最深的力量。
+        </p>
+        <div class="prayer-verse-box">
+          「願生命賜你從容，接納不可改變的際遇；<br>
+          願勇氣常伴隨你，守護值得傾注的真心。<br>
+          取捨已定，局已清澈。願你輕裝啟程，步步心安，落子無悔。」
+        </div>
+      `;
+
+      currentPrayerFullText = `【局內人 · 生命交付與祝福禱詞】\n\n` +
+        `生命座標：${selectedTime} × ${selectedFocus}\n\n` +
+        `親愛的局內人，在此刻的時空裡，我們一同見證這場生命的對話與交割。\n\n` +
+        `${timeProse}\n\n` +
+        `今天，在此刻的沉澱之中，我們首先向「${disc}」深深致謝。長久以來，它曾是你對抗風雨、抵擋失控的沉重鎧甲；但在此刻，它的守護使命已經圓滿。請容許自己溫柔地將它卸下、安放於歲月深處，感謝它一路以來的相伴，從今而後，不再受其牽絆。\n\n` +
+        `同時，請你敞開雙手，珍重地接納屬於你的真實底氣——「${t1}」，以及「${t2}」。這不是沉重的包袱，而是你在千百思緒中淘洗出的黃金，是你穿透迷霧、安身立命最深的力量。\n\n` +
+        `「願生命賜你從容，接納不可改變的際遇；願勇氣常伴隨你，守護值得傾注的真心。取捨已定，局已清澈。願你輕裝啟程，步步心安，落子無悔。」\n\n` +
+        `— 來自 大大觀察家 · 局內人圖籤`;
+
+      currentRecordObj = {
+        date: new Date().toISOString().split('T')[0],
+        timeCoord: selectedTime,
+        focusCoord: selectedFocus,
+        take1: t1,
+        take2: t2,
+        discard: disc,
+        prayer: currentPrayerFullText
+      };
+    }
+
+    // ──────── 匯出、複製與雲端串接 ────────
+    function copyFullPrayer() {
+      navigator.clipboard.writeText(currentPrayerFullText).then(() => {
+        alert("已成功複製完整生命交付禱詞！");
+      });
+    }
+
+    function getFilenameBase() {
+      const now = new Date();
+      const dateStr = now.toISOString().slice(0,10).replace(/-/g, '');
+      return `局內人生命交割_${dateStr}_${selectedTime}_${selectedFocus}`;
+    }
+
+    function downloadTextFile() {
+      const filename = `${getFilenameBase()}.txt`;
+      const blob = new Blob([currentPrayerFullText], { type: "text/plain;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function downloadCsvFile() {
+      const filename = `${getFilenameBase()}.csv`;
+      const headers = ["時間戳記", "訪談日期", "時空維度", "心性焦點", "取1_核心底氣", "取2_核心底氣", "捨_卸下防衛", "生命交付禱詞全文"];
+      const row = [
+        new Date().toLocaleString(),
+        currentRecordObj.date,
+        currentRecordObj.timeCoord,
+        currentRecordObj.focusCoord,
+        `"${currentRecordObj.take1.replace(/"/g, '""')}"`,
+        `"${currentRecordObj.take2.replace(/"/g, '""')}"`,
+        `"${currentRecordObj.discard.replace(/"/g, '""')}"`,
+        `"${currentRecordObj.prayer.replace(/"/g, '""')}"`
+      ];
+      const csvContent = "\uFEFF" + headers.join(",") + "\n" + row.join(",");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    // 已直接內建您的 Web App URL
+    const GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxWVFfy-6cIzziMAux1UaHHdmqAQAyM_zHxbjTEVOU9tj9a082J8dA069pUsYH8FK3s/exec";
+
+    function syncToGoogleSheet() {
+      const btn = document.getElementById('btn-sync-sheet');
+      btn.disabled = true;
+      btn.innerText = "⏳ 正在傳輸至雲端試算表...";
+
+      fetch(GAS_WEBHOOK_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(currentRecordObj)
+      }).then(() => {
+        btn.innerText = "✅ 已成功存入 Google 試算表！";
+        btn.style.background = "#2E7D32";
+        alert("🎉 訪談生命交割紀錄與完整禱詞，已成功同步至 Google 雲端試算表！");
+      }).catch(err => {
+        btn.disabled = false;
+        btn.innerText = "☁️ 重試存入 Google 雲端試算表";
+        alert("傳送失敗，請稍後重試：" + err);
+      });
+    }
+
+    function restartAll() {
+      selectedTime = null;
+      selectedFocus = null;
+      selectedCandidates.clear();
+      document.querySelectorAll('.coord-card').forEach(c => c.classList.remove('selected'));
+      document.getElementById('badge-time').innerText = "待翻開";
+      document.getElementById('badge-time').classList.remove('done');
+      document.getElementById('badge-focus').innerText = "待翻開";
+      document.getElementById('badge-focus').classList.remove('done');
+      updateStep1UI();
+      goToStep(1);
+    }
+
+    renderCardsStep3();
+  </script>
+</body>
+</html>
