@@ -8,14 +8,13 @@
     :root {
       --bg: #F7F5F0;
       --card-bg: #FFFFFF;
-      --card-border: #E2DBD0;
+      --card-border: #E0D9CD;
       --text-main: #242220;
       --text-sub: #6E685F;
       --text-muted: #9E988F;
       --accent: #2B2A28;
       --highlight: #8B4513;
 
-      /* 沉靜自然配色（溫和低飽和，符合東方紙質質感） */
       --take1: #1B5E20;
       --take1-bg: #EAF4EC;
       --take1-border: #2E7D32;
@@ -36,11 +35,16 @@
       --safe-bottom: env(safe-area-inset-bottom, 16px);
     }
 
+    /* 徹底禁止長按選取文字、反白彈窗，保證點擊 100% 響應 */
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+      touch-action: manipulation;
     }
 
     body {
@@ -54,12 +58,12 @@
 
     .app-container {
       width: 100%;
-      max-width: 580px;
+      max-width: 540px;
       margin: 0 auto;
       min-height: 100dvh;
       display: flex;
       flex-direction: column;
-      padding: calc(var(--safe-top) + 12px) 16px calc(var(--safe-bottom) + 14px) 16px;
+      padding: calc(var(--safe-top) + 12px) 16px calc(var(--safe-bottom) + 16px) 16px;
     }
 
     /* 頁面切換控制 */
@@ -79,20 +83,20 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* 頂部 Header 通用（簡潔乾淨） */
+    /* 頂部 Header 通用（緊湊高雅） */
     .header-box {
       text-align: center;
       margin-bottom: 12px;
     }
     .header-badge {
-      font-size: 0.82rem;
+      font-size: 0.85rem;
       letter-spacing: 0.15em;
       color: var(--text-sub);
-      font-weight: 600;
-      margin-bottom: 2px;
+      font-weight: 700;
+      margin-bottom: 3px;
     }
     .header-title {
-      font-size: 1.32rem;
+      font-size: 1.35rem;
       font-weight: 800;
       color: var(--text-main);
       letter-spacing: 0.02em;
@@ -104,56 +108,91 @@
       margin-top: 3px;
     }
 
-    /* ──────── 階段一：生命座標・序幕 ──────── */
+    /* ──────── 階段一：生命座標・翻牌 ──────── */
+    .coord-section {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 14px;
+    }
     .coord-group-title {
       font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--text-sub);
-      margin: 14px 0 8px 4px;
+      font-weight: 800;
+      color: var(--text-main);
       display: flex;
       align-items: center;
       gap: 6px;
+      margin-bottom: 6px;
     }
     .coord-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 8px;
+      gap: 10px;
     }
+
     .coord-card {
-      background: var(--card-bg);
-      border: 1.5px solid var(--card-border);
+      background: #FFFFFF;
+      border: 2px solid var(--card-border);
       border-radius: 12px;
-      padding: 18px 8px;
+      padding: 16px 6px;
       text-align: center;
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--text-main);
       cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-      transition: all 0.2s ease;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.04);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      min-height: 80px;
+      min-height: 86px;
+      position: relative;
     }
+    .coord-card:active {
+      transform: scale(0.96);
+    }
+    .coord-card * {
+      pointer-events: none;
+    }
+
+    .coord-name {
+      font-size: 1.12rem;
+      font-weight: 800;
+      color: var(--text-main);
+      line-height: 1.2;
+    }
+    .coord-hint {
+      font-size: 0.76rem;
+      color: var(--text-sub);
+      margin-top: 5px;
+      font-weight: 600;
+    }
+
     .coord-card.selected {
-      background: var(--accent);
-      color: #FFFFFF;
-      border-color: var(--accent);
-      transform: scale(0.98);
-      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      background: var(--accent) !important;
+      border-color: var(--accent) !important;
+      color: #FFFFFF !important;
+      box-shadow: 0 6px 16px rgba(43, 42, 40, 0.3) !important;
+      transform: translateY(-2px) scale(1.02);
     }
-    .coord-card .card-hint {
-      font-size: 0.75rem;
-      color: inherit;
-      opacity: 0.75;
-      margin-top: 4px;
+    .coord-card.selected .coord-name {
+      color: #FFFFFF !important;
+    }
+    .coord-card.selected .coord-hint {
+      color: #E0DAD1 !important;
+    }
+    .coord-card.selected::after {
+      content: "✓ 翻開";
+      position: absolute;
+      top: 4px;
+      right: 6px;
+      font-size: 0.68rem;
+      font-weight: 800;
+      color: #E2DBD0;
+      letter-spacing: 0.05em;
     }
 
     .footer-btn-wrapper {
       margin-top: auto;
-      padding-top: 16px;
+      padding-top: 10px;
     }
 
     .btn-primary {
@@ -161,19 +200,23 @@
       background: var(--accent);
       color: #FFFFFF;
       font-size: 1.12rem;
-      font-weight: 700;
-      padding: 14px;
+      font-weight: 800;
+      padding: 15px;
       border-radius: 12px;
       border: none;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.14);
       transition: all 0.15s ease;
       text-align: center;
+    }
+    .btn-primary:active {
+      transform: scale(0.99);
     }
     .btn-primary:disabled {
       background: #C7C1B8;
       cursor: not-allowed;
       box-shadow: none;
+      opacity: 0.8;
     }
 
     /* ──────── 階段二：故事序章・情境提問 ──────── */
@@ -193,7 +236,7 @@
       background: #EFE9DE;
       color: #554D41;
       font-size: 0.95rem;
-      font-weight: 700;
+      font-weight: 800;
       padding: 6px 14px;
       border-radius: 20px;
     }
@@ -231,11 +274,11 @@
     .category-tabs::-webkit-scrollbar { display: none; }
     .cat-btn {
       flex: 0 0 auto;
-      padding: 7px 13px;
-      font-size: 0.92rem;
-      font-weight: 600;
+      padding: 8px 14px;
+      font-size: 0.94rem;
+      font-weight: 700;
       border-radius: 20px;
-      border: 1px solid var(--card-border);
+      border: 1.5px solid var(--card-border);
       background: #FFFFFF;
       color: var(--text-sub);
       cursor: pointer;
@@ -257,7 +300,7 @@
       background: var(--card-bg);
       border: 1.5px solid var(--card-border);
       border-radius: 12px;
-      padding: 14px 16px;
+      padding: 15px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -273,39 +316,41 @@
       background: #F4F1EA;
     }
     .card-title {
-      font-size: 1.08rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: var(--text-main);
       flex: 1;
       padding-right: 10px;
       line-height: 1.35;
+      pointer-events: none;
     }
     .card-badge {
       font-size: 0.85rem;
-      font-weight: 600;
+      font-weight: 700;
       padding: 5px 12px;
       border-radius: 14px;
       background: #ECE7DD;
       color: #615A4F;
       white-space: nowrap;
+      pointer-events: none;
     }
     .card-row.is-selected .card-badge {
       background: var(--accent);
       color: #FFFFFF;
     }
 
-    /* ──────── 階段三・五：終局交割（僅專注這幾張，點擊切換，零滑動） ──────── */
+    /* ──────── 階段三・五：終局交割（全螢幕聚焦，點擊切換，零滑動） ──────── */
     .decision-list {
       display: flex;
       flex-direction: column;
       gap: 10px;
-      margin: 12px 0;
+      margin: 14px 0;
       flex: 1;
       justify-content: center;
     }
     .decision-card {
       background: var(--card-bg);
-      border: 1.5px solid var(--card-border);
+      border: 2px solid var(--card-border);
       border-radius: 12px;
       padding: 16px 16px;
       display: flex;
@@ -314,13 +359,14 @@
       cursor: pointer;
       box-shadow: 0 2px 6px rgba(0,0,0,0.03);
       transition: all 0.2s ease;
-      user-select: none;
     }
     .decision-card:active {
       transform: scale(0.985);
     }
+    .decision-card * {
+      pointer-events: none;
+    }
 
-    /* 沉穩自然、不花俏的四態色彩 */
     .decision-card.status-take1 {
       background: var(--take1-bg);
       border-color: var(--take1-border);
@@ -340,7 +386,7 @@
     }
 
     .decision-title {
-      font-size: 1.08rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: var(--text-main);
       flex: 1;
@@ -444,7 +490,7 @@
 
   <div class="app-container">
 
-    <!-- 階段一：生命座標・序幕 -->
+    <!-- 階段一：生命座標・翻牌 -->
     <section class="step-view active" id="view-step1">
       <div class="header-box">
         <div class="header-badge">生命座標 · 序幕</div>
@@ -452,40 +498,46 @@
         <p class="header-desc">為此刻的對話安放一個時空與心性座標</p>
       </div>
 
-      <div class="coord-group-title">⌛ 橫軸：時空維度</div>
-      <div class="coord-grid">
-        <div class="coord-card" onclick="selectTime(this, '過去')">
-          <span>過去</span>
-          <span class="card-hint">回溯痕跡</span>
-        </div>
-        <div class="coord-card" onclick="selectTime(this, '現在')">
-          <span>現在</span>
-          <span class="card-hint">當下體感</span>
-        </div>
-        <div class="coord-card" onclick="selectTime(this, '未來')">
-          <span>未來</span>
-          <span class="card-hint">前行預盼</span>
+      <div class="coord-section">
+        <div class="coord-group-title">⌛ 橫軸：時空維度</div>
+        <div class="coord-grid" id="grid-time">
+          <div class="coord-card" onclick="selectTime(this, '過去')">
+            <span class="coord-name">過去</span>
+            <span class="coord-hint">回溯痕跡</span>
+          </div>
+          <div class="coord-card" onclick="selectTime(this, '現在')">
+            <span class="coord-name">現在</span>
+            <span class="coord-hint">當下體感</span>
+          </div>
+          <div class="coord-card" onclick="selectTime(this, '未來')">
+            <span class="coord-name">未來</span>
+            <span class="coord-hint">前行預盼</span>
+          </div>
         </div>
       </div>
 
-      <div class="coord-group-title">🎯 縱軸：心性焦點</div>
-      <div class="coord-grid">
-        <div class="coord-card" onclick="selectFocus(this, '最滿意的事')">
-          <span>最滿意的事</span>
-          <span class="card-hint">力量來源</span>
-        </div>
-        <div class="coord-card" onclick="selectFocus(this, '最大的困難')">
-          <span>最大的困難</span>
-          <span class="card-hint">卡點破局</span>
-        </div>
-        <div class="coord-card" onclick="selectFocus(this, '最想做的事')">
-          <span>最想做的事</span>
-          <span class="card-hint">心之所向</span>
+      <div class="coord-section">
+        <div class="coord-group-title">🎯 縱軸：心性焦點</div>
+        <div class="coord-grid" id="grid-focus">
+          <div class="coord-card" onclick="selectFocus(this, '最滿意的事')">
+            <span class="coord-name">最滿意的事</span>
+            <span class="coord-hint">力量來源</span>
+          </div>
+          <div class="coord-card" onclick="selectFocus(this, '最大的困難')">
+            <span class="coord-name">最大的困難</span>
+            <span class="coord-hint">卡點破局</span>
+          </div>
+          <div class="coord-card" onclick="selectFocus(this, '最想做的事')">
+            <span class="coord-name">最想做的事</span>
+            <span class="coord-hint">心之所向</span>
+          </div>
         </div>
       </div>
 
       <div class="footer-btn-wrapper">
-        <button class="btn-primary" id="btn-to-step2" disabled onclick="goToStep(2)">開牌 · 故事開始</button>
+        <button class="btn-primary" id="btn-to-step2" disabled onclick="goToStep(2)">
+          開牌 · 故事開始
+        </button>
       </div>
     </section>
 
@@ -535,7 +587,7 @@
       </div>
     </section>
 
-    <!-- 階段三・五：終極取捨（全螢幕專注！點擊卡片循環切換，零滑動） -->
+    <!-- 階段三・五：終極取捨（全螢幕聚焦，點擊切換，零滑動） -->
     <section class="step-view" id="view-decision">
       <div class="header-box">
         <div class="header-badge">行囊終極交割</div>
@@ -655,62 +707,31 @@
       "未來_最想做的事": "「在下一個生命篇章中，哪一個願景讓你哪怕害怕也願意啟程？」"
     };
 
+    // ──────── 階段一：精準且互斥的卡牌翻牌 ────────
     function selectTime(el, val) {
-      document.querySelectorAll('#view-step1 .coord-grid:nth-of-type(1) .coord-card').forEach(c => c.classList.remove('selected'));
+      document.querySelectorAll('#grid-time .coord-card').forEach(c => c.classList.remove('selected'));
       el.classList.add('selected');
       selectedTime = val;
       checkStep1Ready();
     }
 
     function selectFocus(el, val) {
-      document.querySelectorAll('#view-step1 .coord-grid:nth-of-type(2) .coord-card').forEach(c => c.classList.remove('selected'));
+      document.querySelectorAll('#grid-focus .coord-card').forEach(c => c.classList.remove('selected'));
       el.classList.add('selected');
       selectedFocus = val;
       checkStep1Ready();
     }
 
     function checkStep1Ready() {
-      document.getElementById('btn-to-step2').disabled = !(selectedTime && selectedFocus);
-    }
-
-    function goToStep(stepNum) {
-      document.querySelectorAll('.step-view').forEach(v => v.classList.remove('active'));
-      const target = document.getElementById(`view-step${stepNum}`);
-      if (target) target.classList.add('active');
-
-      if (stepNum === 2) {
-        const coordKey = `${selectedTime}_${selectedFocus}`;
-        const qText = coordQuestions[coordKey] || "「在這個生命座標下，靜下心來，聊聊你最深處的體會。」";
-        document.getElementById('display-coord').innerText = `生命坐標：${selectedTime} × ${selectedFocus}`;
-        document.getElementById('display-question').innerText = qText;
-      } else if (stepNum === 3) {
-        renderCardsStep3();
-      } else if (stepNum === 4) {
-        renderReport();
+      const btn = document.getElementById('btn-to-step2');
+      if (selectedTime && selectedFocus) {
+        btn.disabled = false;
+        btn.innerText = `開牌 · 故事開始（${selectedTime} × ${selectedFocus}）➔`;
+      } else {
+        btn.disabled = true;
+        btn.innerText = "開牌 · 故事開始";
       }
-      window.scrollTo(0, 0);
     }
 
-    function switchCategory(cat) {
-      currentCategory = cat;
-      document.querySelectorAll('.cat-btn').forEach(b => {
-        b.classList.toggle('active', b.innerText === cat);
-      });
-      renderCardsStep3();
-    }
-
-    function renderCardsStep3() {
-      const container = document.getElementById('cardListContainer');
-      container.innerHTML = "";
-      const list = cardsDB[currentCategory] || [];
-
-      list.forEach(title => {
-        const isSelected = selectedCandidates.has(title);
-        const row = document.createElement('div');
-        row.className = `card-row ${isSelected ? 'is-selected' : ''}`;
-        row.innerHTML = `
-          <span class="card-title">${title}</span>
-          <span class="card-badge">${isSelected ? '✓ 已入選' : '+ 加入'}</span>
-        `;
-        row.onclick = () => toggleSelectCandidate(title);
- 
+    // ──────── 頁面導航 ────────
+   
