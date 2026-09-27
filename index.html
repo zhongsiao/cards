@@ -8,10 +8,9 @@
     :root {
       --bg: #F7F5F0;
       --card-bg: #FFFFFF;
-      --card-border: #DFD8CC;
+      --card-border: #D8D0C2;
       --text-main: #242220;
       --text-sub: #6E685F;
-      --text-muted: #9E988F;
       --accent: #2B2A28;
       --highlight: #8B4513;
 
@@ -84,7 +83,7 @@
     /* 頂部 Header 通用 */
     .header-box {
       text-align: center;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
     .header-badge {
       font-size: 0.85rem;
@@ -106,7 +105,7 @@
       margin-top: 3px;
     }
 
-    /* ──────── 階段一：生命座標・翻牌（保證全在一屏，原生 button，100% 響應） ──────── */
+    /* ──────── 階段一：生命座標・翻牌（原生 button，保證 100% 響應） ──────── */
     .coord-section {
       display: flex;
       flex-direction: column;
@@ -134,6 +133,7 @@
       background: #EAE3D5;
       padding: 2px 8px;
       border-radius: 6px;
+      transition: all 0.2s ease;
     }
     .coord-status-badge.done {
       color: var(--take1);
@@ -146,7 +146,7 @@
       gap: 10px;
     }
 
-    /* 原生 Button 實現卡牌，保證點擊必響應 */
+    /* 原生 Button 卡牌 */
     button.coord-card {
       background: #FFFFFF;
       border: 2px solid var(--card-border);
@@ -166,7 +166,7 @@
       -webkit-appearance: none;
     }
     button.coord-card:active {
-      transform: scale(0.96);
+      transform: scale(0.95);
     }
 
     .coord-name {
@@ -184,11 +184,11 @@
       pointer-events: none;
     }
 
-    /* 翻牌選中狀態：深邃黑底、發光、微幅浮起 */
+    /* 翻牌選中狀態：立體翻開、黑底白字 */
     button.coord-card.selected {
       background: var(--accent) !important;
       border-color: var(--accent) !important;
-      box-shadow: 0 6px 18px rgba(43, 42, 40, 0.3) !important;
+      box-shadow: 0 6px 18px rgba(43, 42, 40, 0.35) !important;
       transform: translateY(-2px) scale(1.02);
     }
     button.coord-card.selected .coord-name {
@@ -213,28 +213,24 @@
       padding-top: 10px;
     }
 
-    /* 通用按鈕（永遠可點擊，未達標時溫和提醒，不鎖死） */
+    /* 通用按鈕（永遠可點、不鎖死） */
     .btn-primary {
       width: 100%;
-      background: #8F887D;
+      background: var(--accent);
       color: #FFFFFF;
-      font-size: 1.12rem;
+      font-size: 1.15rem;
       font-weight: 800;
-      padding: 15px;
+      padding: 16px;
       border-radius: 12px;
       border: none;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 14px rgba(43, 42, 40, 0.25);
       transition: all 0.15s ease;
       text-align: center;
       outline: none;
     }
-    .btn-primary.ready {
-      background: var(--accent);
-      box-shadow: 0 4px 14px rgba(43, 42, 40, 0.25);
-    }
     .btn-primary:active {
-      transform: scale(0.99);
+      transform: scale(0.985);
     }
 
     /* ──────── 階段二：故事序章・情境提問 ──────── */
@@ -508,12 +504,12 @@
 
   <div class="app-container">
 
-    <!-- ════════ 階段一：生命座標・翻牌 ════════ -->
+    <!-- ════════ 階段一：生命座標・序幕 ════════ -->
     <section class="step-view active" id="view-step1">
       <div class="header-box">
         <div class="header-badge">生命座標 · 序幕</div>
         <h1 class="header-title">上下兩組各翻開一張牌</h1>
-        <p class="header-desc">為此刻的對話安放一個時空與心性座標</p>
+        <p class="header-desc">點擊牌面翻開；或直接按下方由系統為您開牌</p>
       </div>
 
       <div class="coord-section">
@@ -559,8 +555,8 @@
       </div>
 
       <div class="footer-btn-wrapper">
-        <button type="button" class="btn-primary" id="btn-to-step2" onclick="handleStep1Submit()">
-          請翻開上下各一張牌
+        <button type="button" class="btn-primary" id="btn-to-step2" onclick="handleStep1Click()">
+          開牌 · 故事開始
         </button>
       </div>
     </section>
@@ -582,7 +578,7 @@
       </div>
 
       <div class="footer-btn-wrapper">
-        <button type="button" class="btn-primary ready" onclick="goToStep(3)">
+        <button type="button" class="btn-primary" onclick="goToStep(3)">
           對話沉澱 · 挑選共鳴圖籤 ➔
         </button>
       </div>
@@ -613,7 +609,7 @@
       </div>
     </section>
 
-    <!-- ════════ 階段三・五：終極取捨（全螢幕聚焦，點擊卡片循環切換，零滑動） ════════ -->
+    <!-- ════════ 階段三・五：終極取捨 ════════ -->
     <section class="step-view" id="view-decision">
       <div class="header-box">
         <div class="header-badge">行囊終極交割</div>
@@ -662,7 +658,7 @@
       </div>
 
       <div class="footer-btn-wrapper" style="display:flex; flex-direction:column; gap:8px;">
-        <button type="button" class="btn-primary ready" onclick="copyResult()">📋 複製交割紀錄</button>
+        <button type="button" class="btn-primary" onclick="copyResult()">📋 複製交割紀錄</button>
         <button type="button" class="btn-primary" style="background:#5C554B;" onclick="restartAll()">🔄 重新整理開局</button>
       </div>
     </section>
@@ -733,7 +729,338 @@
       "未來_最想做的事": "「在下一個生命篇章中，哪一個願景讓你哪怕害怕也願意啟程？」"
     };
 
-    // ──────── 階段一：精準且互斥的卡牌翻牌 ────────
+    // ──────── 階段一：保證點擊必定觸發 ────────
+    function pickTime(val) {
+      selectedTime = val;
+      const buttons = document.querySelectorAll('#grid-time .coord-card');
+      buttons.forEach(btn => {
+        if (btn.getAttribute('data-val') === val) {
+          btn.classList.add('selected');
+        } else {
+          btn.classList.remove('selected');
+        }
+      });
+
+      const badge = document.getElementById('badge-time');
+      badge.innerText = `✓ ${val}`;
+      badge.classList.add('done');
+      updateStep1UI();
+    }
+
+    function pickFocus(val) {
+      selectedFocus = val;
+      const buttons = document.querySelectorAll('#grid-focus .coord-card');
+      buttons.forEach(btn => {
+        if (btn.getAttribute('data-val') === val) {
+          btn.classList.add('selected');
+        } else {
+          btn.classList.remove('selected');
+        }
+      });
+
+      const badge = document.getElementById('badge-focus');
+      badge.innerText = `✓ ${val}`;
+      badge.classList.add('done');
+      updateStep1UI();
+    }
+
+    // 綁定點擊事件
     document.querySelectorAll('#grid-time .coord-card').forEach(btn => {
-      btn.addEventListener('click', function(e) {
-        document.querySelectorAll('#grid-time .coord
+      btn.onclick = function() {
+        pickTime(this.getAttribute('data-val'));
+      };
+    });
+
+    document.querySelectorAll('#grid-focus .coord-card').forEach(btn => {
+      btn.onclick = function() {
+        pickFocus(this.getAttribute('data-val'));
+      };
+    });
+
+    function updateStep1UI() {
+      const btn = document.getElementById('btn-to-step2');
+      if (selectedTime && selectedFocus) {
+        btn.innerText = `開牌 · 故事開始（${selectedTime} × ${selectedFocus}）➔`;
+      } else if (selectedTime && !selectedFocus) {
+        btn.innerText = `已選【${selectedTime}】，點此隨機開焦點，或手動點選`;
+      } else if (!selectedTime && selectedFocus) {
+        btn.innerText = `已選【${selectedFocus}】，點此隨機開時空，或手動點選`;
+      } else {
+        btn.innerText = "開牌 · 故事開始（手選或點此隨機開牌）";
+      }
+    }
+
+    // 底下按鈕點擊：選齊直接進入；若尚未選齊，智慧隨機為其補齊開牌！
+    function handleStep1Click() {
+      const times = ['過去', '現在', '未來'];
+      const focuses = ['最滿意的事', '最大的困難', '最想做的事'];
+
+      if (!selectedTime) {
+        const randTime = times[Math.floor(Math.random() * times.length)];
+        pickTime(randTime);
+      }
+      if (!selectedFocus) {
+        const randFocus = focuses[Math.floor(Math.random() * focuses.length)];
+        pickFocus(randFocus);
+      }
+
+      // 翻牌成功，平滑進入第二頁
+      setTimeout(() => {
+        goToStep(2);
+      }, 150);
+    }
+
+    // ──────── 頁面導航 ────────
+    function goToStep(stepNum) {
+      document.querySelectorAll('.step-view').forEach(v => v.classList.remove('active'));
+      const target = document.getElementById(`view-step${stepNum}`);
+      if (target) target.classList.add('active');
+
+      if (stepNum === 2) {
+        const coordKey = `${selectedTime}_${selectedFocus}`;
+        const qText = coordQuestions[coordKey] || "「在這個生命座標下，靜下心來，聊聊你最深處的體會。」";
+        document.getElementById('display-coord').innerText = `生命坐標：${selectedTime} × ${selectedFocus}`;
+        document.getElementById('display-question').innerText = qText;
+      } else if (stepNum === 3) {
+        renderCardsStep3();
+      } else if (stepNum === 4) {
+        renderReport();
+      }
+      window.scrollTo(0, 0);
+    }
+
+    // ──────── 階段三：海選卡片 ────────
+    function switchCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(b => {
+        b.classList.toggle('active', b.innerText === cat);
+      });
+      renderCardsStep3();
+    }
+
+    function renderCardsStep3() {
+      const container = document.getElementById('cardListContainer');
+      container.innerHTML = "";
+      const list = cardsDB[currentCategory] || [];
+
+      list.forEach(title => {
+        const isSelected = selectedCandidates.has(title);
+        const row = document.createElement('div');
+        row.className = `card-row ${isSelected ? 'is-selected' : ''}`;
+        row.innerHTML = `
+          <span class="card-title">${title}</span>
+          <span class="card-badge">${isSelected ? '✓ 已入選' : '+ 加入'}</span>
+        `;
+        row.onclick = () => toggleSelectCandidate(title);
+        container.appendChild(row);
+      });
+
+      updateStep3Button();
+    }
+
+    function toggleSelectCandidate(title) {
+      if (selectedCandidates.has(title)) {
+        selectedCandidates.delete(title);
+      } else {
+        if (selectedCandidates.size >= 6) {
+          alert("最多挑選 6 張卡片進行終極抉擇喔！");
+          return;
+        }
+        selectedCandidates.set(title, 'exclude');
+      }
+      renderCardsStep3();
+    }
+
+    function updateStep3Button() {
+      const count = selectedCandidates.size;
+      const btn = document.getElementById('btn-to-decision');
+      if (count >= 3 && count <= 6) {
+        btn.innerText = `進入取捨 (已選 ${count} 張) ➔`;
+      } else {
+        btn.innerText = `進入取捨 (已選 ${count}/3-6 張，還差 ${Math.max(0, 3 - count)} 張)`;
+      }
+    }
+
+    function goToDecisionStep() {
+      const count = selectedCandidates.size;
+      if (count < 3 || count > 6) {
+        alert("請挑選 3 到 6 張有共鳴的卡片喔！");
+        return;
+      }
+
+      let idx = 0;
+      for (let [title] of selectedCandidates.entries()) {
+        if (idx === 0) selectedCandidates.set(title, 'take1');
+        else if (idx === 1) selectedCandidates.set(title, 'take2');
+        else if (idx === 2) selectedCandidates.set(title, 'discard');
+        else selectedCandidates.set(title, 'exclude');
+        idx++;
+      }
+
+      document.querySelectorAll('.step-view').forEach(v => v.classList.remove('active'));
+      document.getElementById('view-decision').classList.add('active');
+      renderDecisionCards();
+      window.scrollTo(0, 0);
+    }
+
+    function renderDecisionCards() {
+      const container = document.getElementById('decisionListContainer');
+      container.innerHTML = "";
+
+      let takeCount = 0, discardCount = 0;
+
+      selectedCandidates.forEach((status, title) => {
+        if (status === 'take1' || status === 'take2') takeCount++;
+        if (status === 'discard') discardCount++;
+
+        let tagText = "⚪ 不納入";
+        if (status === 'take1') tagText = "🌿 取 1";
+        if (status === 'take2') tagText = "🌿 取 2";
+        if (status === 'discard') tagText = "🕊️ 捨";
+
+        const card = document.createElement('div');
+        card.className = `decision-card status-${status}`;
+        card.onclick = () => cycleDecisionStatus(title);
+
+        card.innerHTML = `
+          <span class="decision-title">${title}</span>
+          <span class="decision-tag">${tagText}</span>
+        `;
+        container.appendChild(card);
+      });
+
+      const confirmBtn = document.getElementById('btn-to-step4');
+      const isValid = (takeCount === 2 && discardCount === 1);
+      if (isValid) {
+        confirmBtn.innerText = "確認行囊 · 交付祝福（二留一捨）";
+      } else {
+        confirmBtn.innerText = `請點擊卡片完成：帶走 2 個、丟棄 1 個 (取:${takeCount}/2 捨:${discardCount}/1)`;
+      }
+    }
+
+    function handleDecisionSubmit() {
+      let takeCount = 0, discardCount = 0;
+      selectedCandidates.forEach((status) => {
+        if (status === 'take1' || status === 'take2') takeCount++;
+        if (status === 'discard') discardCount++;
+      });
+
+      if (takeCount !== 2 || discardCount !== 1) {
+        alert("請點擊卡片，剛好標記 2 個帶走（取1、取2）與 1 個丟棄（捨）喔！");
+        return;
+      }
+      goToStep(4);
+    }
+
+    function cycleDecisionStatus(title) {
+      const current = selectedCandidates.get(title);
+
+      if (current === 'exclude') {
+        selectedCandidates.set(title, 'take_pending');
+      } else if (current === 'take1' || current === 'take2') {
+        for (let [k, v] of selectedCandidates.entries()) {
+          if (v === 'discard') selectedCandidates.set(k, 'exclude');
+        }
+        selectedCandidates.set(title, 'discard');
+      } else if (current === 'discard') {
+        selectedCandidates.set(title, 'exclude');
+      }
+
+      rebalanceDecisionTakes();
+      renderDecisionCards();
+    }
+
+    function rebalanceDecisionTakes() {
+      let takeList = [];
+      for (let [title, status] of selectedCandidates.entries()) {
+        if (status === 'take1' || status === 'take2' || status === 'take_pending') {
+          takeList.push(title);
+        }
+      }
+
+      takeList.forEach((title, idx) => {
+        if (idx === 0) selectedCandidates.set(title, 'take1');
+        else if (idx === 1) selectedCandidates.set(title, 'take2');
+        else selectedCandidates.set(title, 'exclude');
+      });
+    }
+
+    function renderReport() {
+      document.getElementById('reportCoordTitle').innerText = `生命坐標：${selectedTime} × ${selectedFocus}`;
+
+      const takesContainer = document.getElementById('reportTakesList');
+      const discardContainer = document.getElementById('reportDiscardList');
+      const excludeContainer = document.getElementById('reportExcludeList');
+      const excludeSection = document.getElementById('reportExcludeSection');
+
+      takesContainer.innerHTML = "";
+      discardContainer.innerHTML = "";
+      excludeContainer.innerHTML = "";
+
+      let hasExclude = false;
+
+      selectedCandidates.forEach((status, title) => {
+        const item = document.createElement('div');
+        if (status === 'take1') {
+          item.className = 'report-item take1';
+          item.innerHTML = `<b>【取 1】</b> ${title}`;
+          takesContainer.appendChild(item);
+        } else if (status === 'take2') {
+          item.className = 'report-item take2';
+          item.innerHTML = `<b>【取 2】</b> ${title}`;
+          takesContainer.appendChild(item);
+        } else if (status === 'discard') {
+          item.className = 'report-item discard';
+          item.innerHTML = `<b>【捨】</b> ${title}`;
+          discardContainer.appendChild(item);
+        } else if (status === 'exclude') {
+          hasExclude = true;
+          item.className = 'report-item exclude';
+          item.innerHTML = `<b>【不納入】</b> ${title}`;
+          excludeContainer.appendChild(item);
+        }
+      });
+
+      excludeSection.style.display = hasExclude ? "block" : "none";
+    }
+
+    function copyResult() {
+      let t1 = "", t2 = "", disc = "";
+      let excludes = [];
+
+      selectedCandidates.forEach((status, title) => {
+        if (status === 'take1') t1 = title;
+        if (status === 'take2') t2 = title;
+        if (status === 'discard') disc = title;
+        if (status === 'exclude') excludes.push(title);
+      });
+
+      const text = `【局內人圖籤 · 生命交割報告】\n` +
+                   `生命座標：${selectedTime} × ${selectedFocus}\n\n` +
+                   `🌿 帶走的生命行囊（取二 · 核心底氣）：\n • 【取 1】${t1}\n • 【取 2】${t2}\n\n` +
+                   `🕊️ 丟棄的防衛包袱（捨一 · 感謝告別）：\n • 【捨】${disc}\n\n` +
+                   (excludes.length > 0 ? `📦 暫存不納入（封存沉澱）：\n${excludes.map(e => ' • ' + e).join('\n')}\n\n` : '') +
+                   `— 來自 大大觀察家 · 局內人圖籤`;
+
+      navigator.clipboard.writeText(text).then(() => {
+        alert("交割紀錄已複製至剪貼簿！");
+      });
+    }
+
+    function restartAll() {
+      selectedTime = null;
+      selectedFocus = null;
+      selectedCandidates.clear();
+      document.querySelectorAll('.coord-card').forEach(c => c.classList.remove('selected'));
+      document.getElementById('badge-time').innerText = "待翻開";
+      document.getElementById('badge-time').classList.remove('done');
+      document.getElementById('badge-focus').innerText = "待翻開";
+      document.getElementById('badge-focus').classList.remove('done');
+      updateStep1UI();
+      goToStep(1);
+    }
+
+    renderCardsStep3();
+  </script>
+</body>
+</html>
