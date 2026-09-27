@@ -542,15 +542,15 @@
           <span class="coord-status-badge" id="badge-time">待翻開</span>
         </div>
         <div class="coord-grid" id="grid-time">
-          <button type="button" class="coord-card" data-val="過去">
+          <button type="button" class="coord-card" data-val="過去" onclick="pickTime('過去')">
             <span class="coord-name">過去</span>
             <span class="coord-hint">回溯痕跡</span>
           </button>
-          <button type="button" class="coord-card" data-val="現在">
+          <button type="button" class="coord-card" data-val="現在" onclick="pickTime('現在')">
             <span class="coord-name">現在</span>
             <span class="coord-hint">當下體感</span>
           </button>
-          <button type="button" class="coord-card" data-val="未來">
+          <button type="button" class="coord-card" data-val="未來" onclick="pickTime('未來')">
             <span class="coord-name">未來</span>
             <span class="coord-hint">前行預盼</span>
           </button>
@@ -563,15 +563,15 @@
           <span class="coord-status-badge" id="badge-focus">待翻開</span>
         </div>
         <div class="coord-grid" id="grid-focus">
-          <button type="button" class="coord-card" data-val="最滿意的事">
+          <button type="button" class="coord-card" data-val="最滿意的事" onclick="pickFocus('最滿意的事')">
             <span class="coord-name">最滿意的事</span>
             <span class="coord-hint">力量來源</span>
           </button>
-          <button type="button" class="coord-card" data-val="最大的困難">
+          <button type="button" class="coord-card" data-val="最大的困難" onclick="pickFocus('最大的困難')">
             <span class="coord-name">最大的困難</span>
             <span class="coord-hint">卡點破局</span>
           </button>
-          <button type="button" class="coord-card" data-val="最想做的事">
+          <button type="button" class="coord-card" data-val="最想做的事" onclick="pickFocus('最想做的事')">
             <span class="coord-name">最想做的事</span>
             <span class="coord-hint">心之所向</span>
           </button>
@@ -722,7 +722,7 @@
         "難以割捨的沉沒成本",
         "害怕承擔選擇後的未知代價",
         "放棄穩定換取未知的冒險",
-        "在 reality 生計與理想熱情間妥協",
+        "在現實生計與理想熱情間妥協",
         "顧全大局而做出的自我退讓",
         "過去挫折留下的隱性創傷"
       ],
@@ -918,6 +918,7 @@
         });
         selectedCandidates.set(title, 'discard');
       } else {
+        // targetStatus === 'exclude'
         selectedCandidates.set(title, 'exclude');
       }
 
