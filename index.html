@@ -27,10 +27,6 @@
       --discard-bg: #FAECEB;
       --discard-border: #C62828;
 
-      --exclude: #7A756D;
-      --exclude-bg: #F0ECE4;
-      --exclude-border: #D6CEC2;
-
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 16px);
     }
@@ -105,7 +101,7 @@
       margin-top: 3px;
     }
 
-    /* ──────── 階段一：生命座標・翻牌（原生 button，保證 100% 響應） ──────── */
+    /* ──────── 階段一：生命座標・翻牌 ──────── */
     .coord-section {
       display: flex;
       flex-direction: column;
@@ -146,7 +142,6 @@
       gap: 10px;
     }
 
-    /* 原生 Button 卡牌 */
     button.coord-card {
       background: #FFFFFF;
       border: 2px solid var(--card-border);
@@ -184,7 +179,6 @@
       pointer-events: none;
     }
 
-    /* 翻牌選中狀態：立體翻開、黑底白字 */
     button.coord-card.selected {
       background: var(--accent) !important;
       border-color: var(--accent) !important;
@@ -213,7 +207,6 @@
       padding-top: 10px;
     }
 
-    /* 通用按鈕（永遠可點、不鎖死） */
     .btn-primary {
       width: 100%;
       background: var(--accent);
@@ -353,7 +346,7 @@
       color: #FFFFFF;
     }
 
-    /* ──────── 階段三・五：終局交割（全螢幕聚焦，點擊切換，零滑動） ──────── */
+    /* ──────── 階段三・五：終局交割 ──────── */
     .decision-list {
       display: flex;
       flex-direction: column;
@@ -394,9 +387,9 @@
       border-color: var(--discard-border);
     }
     .decision-card.status-exclude {
-      background: var(--exclude-bg);
-      border-color: var(--exclude-border);
-      opacity: 0.85;
+      background: #F0ECE4;
+      border-color: #D6CEC2;
+      opacity: 0.75;
     }
 
     .decision-title {
@@ -433,34 +426,34 @@
       padding: 8px;
     }
 
-    /* ──────── 階段四：生命交割報告 ──────── */
+    /* ──────── 階段四：生命交割報告與祝福禱詞 ──────── */
     .report-card {
       background: #FFFFFF;
       border: 1.5px solid var(--card-border);
       border-radius: 16px;
-      padding: 20px 16px;
+      padding: 22px 18px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.04);
       display: flex;
       flex-direction: column;
-      gap: 14px;
+      gap: 16px;
     }
     .report-section-title {
-      font-size: 0.98rem;
+      font-size: 1rem;
       font-weight: 800;
       color: var(--text-main);
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
     }
     .report-list {
       display: flex;
       flex-direction: column;
-      gap: 6px;
+      gap: 8px;
     }
     .report-item {
-      padding: 12px 14px;
-      border-radius: 8px;
+      padding: 13px 14px;
+      border-radius: 10px;
       font-size: 1.05rem;
       font-weight: 800;
       line-height: 1.35;
@@ -471,32 +464,66 @@
     .report-item.take1 {
       background: var(--take1-bg);
       color: var(--take1);
-      border-left: 4px solid var(--take1);
+      border-left: 5px solid var(--take1);
     }
     .report-item.take2 {
       background: var(--take2-bg);
       color: var(--take2);
-      border-left: 4px solid var(--take2);
+      border-left: 5px solid var(--take2);
     }
     .report-item.discard {
       background: var(--discard-bg);
       color: var(--discard);
-      border-left: 4px solid var(--discard);
+      border-left: 5px solid var(--discard);
     }
-    .report-item.exclude {
-      background: var(--exclude-bg);
-      color: #616161;
-      border-left: 4px solid #9E9E9E;
-      font-size: 0.95rem;
-    }
-    .blessing-box {
+
+    /* 感性祝福禱詞卡片 */
+    .prayer-card {
       background: #FAF7F2;
-      border-radius: 10px;
-      padding: 14px;
-      font-size: 0.92rem;
+      border-radius: 14px;
+      padding: 18px 16px;
+      border: 1.5px solid #E4D8C4;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      position: relative;
+    }
+    .prayer-header {
+      font-size: 1.02rem;
+      font-weight: 800;
+      color: #6A4E23;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      border-bottom: 1px dashed #DCCDB8;
+      padding-bottom: 8px;
+    }
+    .prayer-body {
+      font-size: 0.96rem;
+      line-height: 1.75;
+      color: #3E3832;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .prayer-paragraph {
+      margin: 0;
+    }
+    .prayer-highlight {
+      font-weight: 800;
+      color: var(--text-main);
+      padding: 1px 4px;
+      background: #EFE4D2;
+      border-radius: 4px;
+    }
+    .prayer-verse {
+      font-style: italic;
       color: #554D41;
-      line-height: 1.6;
-      border: 1px solid #E6DEC8;
+      border-left: 3px solid #8B4513;
+      padding-left: 10px;
+      margin-top: 4px;
+      font-size: 0.93rem;
+      line-height: 1.65;
     }
   </style>
 </head>
@@ -627,7 +654,7 @@
       </div>
     </section>
 
-    <!-- ════════ 階段四：生命交割報告 ════════ -->
+    <!-- ════════ 階段四：生命交割報告與祝福禱詞 ════════ -->
     <section class="step-view" id="view-step4">
       <div class="header-box">
         <div class="header-badge">交付祝福 · 儀式完成</div>
@@ -642,23 +669,21 @@
         </div>
 
         <div>
-          <div class="report-section-title">🕊️ 丟棄的防衛包袱（捨一 · 感謝告別）</div>
+          <div class="report-section-title">🕊️ 卸下的防衛包袱（捨一 · 感謝告別）</div>
           <div class="report-list" id="reportDiscardList"></div>
         </div>
 
-        <div id="reportExcludeSection">
-          <div class="report-section-title">📦 暫存不納入（封存沉澱）</div>
-          <div class="report-list" id="reportExcludeList"></div>
-        </div>
-
-        <div class="blessing-box">
-          <b>局內人寄語：</b><br>
-          在千百思緒之中，你親手帶走了兩份真實底氣，果斷卸下了一件沉重鎧甲。取捨已定，局已清澈。願你輕裝啟程，落子無悔。
+        <!-- 感性祝福禱詞區塊（融入情境禱念） -->
+        <div class="prayer-card">
+          <div class="prayer-header">
+            <span>🕯️ 生命交付禱詞 · 祝福啟程</span>
+          </div>
+          <div class="prayer-body" id="prayerContent"></div>
         </div>
       </div>
 
       <div class="footer-btn-wrapper" style="display:flex; flex-direction:column; gap:8px;">
-        <button type="button" class="btn-primary" onclick="copyResult()">📋 複製交割紀錄</button>
+        <button type="button" class="btn-primary" onclick="copyResult()">📋 複製完整交割紀錄與祝福</button>
         <button type="button" class="btn-primary" style="background:#5C554B;" onclick="restartAll()">🔄 重新整理開局</button>
       </div>
     </section>
@@ -729,7 +754,7 @@
       "未來_最想做的事": "「在下一個生命篇章中，哪一個願景讓你哪怕害怕也願意啟程？」"
     };
 
-    // ──────── 階段一：保證點擊必定觸發 ────────
+    // ──────── 階段一：翻牌互動 ────────
     function pickTime(val) {
       selectedTime = val;
       const buttons = document.querySelectorAll('#grid-time .coord-card');
@@ -764,7 +789,6 @@
       updateStep1UI();
     }
 
-    // 綁定點擊事件
     document.querySelectorAll('#grid-time .coord-card').forEach(btn => {
       btn.onclick = function() {
         pickTime(this.getAttribute('data-val'));
@@ -790,7 +814,6 @@
       }
     }
 
-    // 底下按鈕點擊：選齊直接進入；若尚未選齊，智慧隨機為其補齊開牌！
     function handleStep1Click() {
       const times = ['過去', '現在', '未來'];
       const focuses = ['最滿意的事', '最大的困難', '最想做的事'];
@@ -804,13 +827,12 @@
         pickFocus(randFocus);
       }
 
-      // 翻牌成功，平滑進入第二頁
       setTimeout(() => {
         goToStep(2);
       }, 150);
     }
 
-    // ──────── 頁面導航 ────────
+    // ──────── 頁面切換 ────────
     function goToStep(stepNum) {
       document.querySelectorAll('.step-view').forEach(v => v.classList.remove('active'));
       const target = document.getElementById(`view-step${stepNum}`);
@@ -829,7 +851,7 @@
       window.scrollTo(0, 0);
     }
 
-    // ──────── 階段三：海選卡片 ────────
+    // ──────── 階段三：初選 ────────
     function switchCategory(cat) {
       currentCategory = cat;
       document.querySelectorAll('.cat-btn').forEach(b => {
@@ -985,65 +1007,109 @@
       });
     }
 
+    // ──────── 階段四：交割報告與感性禱詞融合 ────────
     function renderReport() {
       document.getElementById('reportCoordTitle').innerText = `生命坐標：${selectedTime} × ${selectedFocus}`;
 
       const takesContainer = document.getElementById('reportTakesList');
       const discardContainer = document.getElementById('reportDiscardList');
-      const excludeContainer = document.getElementById('reportExcludeList');
-      const excludeSection = document.getElementById('reportExcludeSection');
-
       takesContainer.innerHTML = "";
       discardContainer.innerHTML = "";
-      excludeContainer.innerHTML = "";
 
-      let hasExclude = false;
+      let t1 = "", t2 = "", disc = "";
 
       selectedCandidates.forEach((status, title) => {
-        const item = document.createElement('div');
         if (status === 'take1') {
+          t1 = title;
+          const item = document.createElement('div');
           item.className = 'report-item take1';
-          item.innerHTML = `<b>【取 1】</b> ${title}`;
+          item.innerHTML = `<span>🌿</span> <span><b>【取 1】</b> ${title}</span>`;
           takesContainer.appendChild(item);
         } else if (status === 'take2') {
+          t2 = title;
+          const item = document.createElement('div');
           item.className = 'report-item take2';
-          item.innerHTML = `<b>【取 2】</b> ${title}`;
+          item.innerHTML = `<span>🌿</span> <span><b>【取 2】</b> ${title}</span>`;
           takesContainer.appendChild(item);
         } else if (status === 'discard') {
+          disc = title;
+          const item = document.createElement('div');
           item.className = 'report-item discard';
-          item.innerHTML = `<b>【捨】</b> ${title}`;
+          item.innerHTML = `<span>🕊️</span> <span><b>【捨】</b> ${title}</span>`;
           discardContainer.appendChild(item);
-        } else if (status === 'exclude') {
-          hasExclude = true;
-          item.className = 'report-item exclude';
-          item.innerHTML = `<b>【不納入】</b> ${title}`;
-          excludeContainer.appendChild(item);
         }
+        // 注意：不納入的項目直接不渲染、不顯示
       });
 
-      excludeSection.style.display = hasExclude ? "block" : "none";
+      // 動態生成深層禱詞內容
+      renderPrayerProse(selectedTime, selectedFocus, t1, t2, disc);
+    }
+
+    function renderPrayerProse(timeCoord, focusCoord, t1, t2, disc) {
+      const container = document.getElementById('prayerContent');
+
+      let timeIntro = "";
+      if (timeCoord === "過去") {
+        timeIntro = `回首走過的歲月，面對記憶深處的「${focusCoord}」，那些曾經的波瀾與重量，早已刻進靈魂的紋理。`;
+      } else if (timeCoord === "現在") {
+        timeIntro = `立足於此時此刻的當下，面對真實觸及的「${focusCoord}」，你在喧囂的日常中看清了自己最在乎的重心。`;
+      } else {
+        timeIntro = `凝視前方嶄新的長路，面對即將展開的「${focusCoord}」，未知的風景正在等待著你親手鋪展。`;
+      }
+
+      container.innerHTML = `
+        <p class="prayer-paragraph">
+          ${timeIntro}
+        </p>
+        <p class="prayer-paragraph">
+          🕊️ <b>【釋懷與告別】</b><br>
+          在此刻，我們向曾保護過你的<span class="prayer-highlight">「${disc}」</span>深深致敬。它曾是你對抗風雨、抵擋失控的厚重鎧甲；如今它的階段性使命已經圓滿。請容許自己溫柔卸下它，感謝它一路相伴，並安心將它歸還給歲月。
+        </p>
+        <p class="prayer-paragraph">
+          🌿 <b>【持守與底氣】</b><br>
+          你所親手帶走的<span class="prayer-highlight">「${t1}」</span>與<span class="prayer-highlight">「${t2}」</span>，是你在千百思緒中淬鍊出的核心精華。這不是沉重的包袱，而是你靈魂最堅實的底氣與定海神針，將引領你在混沌中辨明心之所向。
+        </p>
+        <div class="prayer-verse">
+          「願生命賜你從容，接納不可改變的際遇；賜你勇氣，守護值得傾注的真心。<br>
+          取捨已定，局已清澈。願你輕裝啟程，步步心安，落子無悔。」
+        </div>
+      `;
     }
 
     function copyResult() {
       let t1 = "", t2 = "", disc = "";
-      let excludes = [];
-
       selectedCandidates.forEach((status, title) => {
         if (status === 'take1') t1 = title;
         if (status === 'take2') t2 = title;
         if (status === 'discard') disc = title;
-        if (status === 'exclude') excludes.push(title);
       });
 
-      const text = `【局內人圖籤 · 生命交割報告】\n` +
+      let timeIntro = "";
+      if (selectedTime === "過去") {
+        timeIntro = `回首走過的歲月，面對記憶深處的「${selectedFocus}」，那些曾經的波瀾早已化為靈魂的養分。`;
+      } else if (selectedTime === "現在") {
+        timeIntro = `立足於此時此刻的當下，面對真實觸及的「${selectedFocus}」，你在日常中看清了靈魂的重心。`;
+      } else {
+        timeIntro = `凝視前方嶄新的長路，面對即將展開的「${selectedFocus}」，新的篇章正等待你親手落子。`;
+      }
+
+      const text = `【局內人圖籤 · 生命行囊交割書】\n` +
                    `生命座標：${selectedTime} × ${selectedFocus}\n\n` +
-                   `🌿 帶走的生命行囊（取二 · 核心底氣）：\n • 【取 1】${t1}\n • 【取 2】${t2}\n\n` +
-                   `🕊️ 丟棄的防衛包袱（捨一 · 感謝告別）：\n • 【捨】${disc}\n\n` +
-                   (excludes.length > 0 ? `📦 暫存不納入（封存沉澱）：\n${excludes.map(e => ' • ' + e).join('\n')}\n\n` : '') +
+                   `🌿 帶走的生命行囊（取二 · 核心底氣）：\n` +
+                   ` • 【取 1】${t1}\n` +
+                   ` • 【取 2】${t2}\n\n` +
+                   `🕊️ 卸下的防衛包袱（捨一 · 感謝告別）：\n` +
+                   ` • 【捨】${disc}\n\n` +
+                   `────────────────────\n` +
+                   `🕯️【生命交付禱詞 · 祝福啟程】\n\n` +
+                   `${timeIntro}\n\n` +
+                   `🕊️ 致謝告別：向曾護持過你的「${disc}」道謝。它的使命已經圓滿，請安心將它卸下安放於歲月深處。\n\n` +
+                   `🌿 銘刻底氣：請珍重握緊「${t1}」與「${t2}」，這是你千錘百鍊後留下的真實力量。\n\n` +
+                   `「願生命賜你從容，接納不可改變的際遇；賜你勇氣，守護值得傾注的真心。取捨已定，局已清澈。願你輕裝啟程，步步心安，落子無悔。」\n\n` +
                    `— 來自 大大觀察家 · 局內人圖籤`;
 
       navigator.clipboard.writeText(text).then(() => {
-        alert("交割紀錄已複製至剪貼簿！");
+        alert("已成功複製完整交割紀錄與祝福禱詞！");
       });
     }
 
