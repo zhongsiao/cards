@@ -14,10 +14,24 @@
       --text-muted: #9E988F;
       --accent: #2B2A28;
       --highlight: #8B4513;
-      --keep: #1B5E20;
-      --keep-bg: #E8F5E9;
+
+      /* 高辨識度色彩系統 */
+      --take1: #1B5E20;
+      --take1-bg: #E8F5E9;
+      --take1-border: #4CAF50;
+
+      --take2: #00695C;
+      --take2-bg: #E0F2F1;
+      --take2-border: #26A69A;
+
       --discard: #B71C1C;
       --discard-bg: #FFEBEE;
+      --discard-border: #EF5350;
+
+      --exclude: #757575;
+      --exclude-bg: #F5F5F5;
+      --exclude-border: #BDBDBD;
+
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bottom: env(safe-area-inset-bottom, 16px);
     }
@@ -48,7 +62,6 @@
       padding: calc(var(--safe-top) + 12px) 14px calc(var(--safe-bottom) + 12px) 14px;
     }
 
-    /* 頁面切換控制 */
     .step-view {
       display: none;
       flex-direction: column;
@@ -65,10 +78,9 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* 頂部 Header 通用 */
     .header-box {
       text-align: center;
-      margin-bottom: 14px;
+      margin-bottom: 12px;
     }
     .header-badge {
       font-size: 0.85rem;
@@ -84,12 +96,12 @@
       letter-spacing: 0.02em;
     }
     .header-desc {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       color: var(--text-sub);
-      margin-top: 4px;
+      margin-top: 3px;
     }
 
-    /* ──────── 階段一：生命座標・序幕 ──────── */
+    /* 階段一：生命座標・序幕 */
     .coord-group-title {
       font-size: 0.95rem;
       font-weight: 700;
@@ -139,17 +151,16 @@
 
     .footer-btn-wrapper {
       margin-top: auto;
-      padding-top: 16px;
+      padding-top: 14px;
     }
 
-    /* 通用大按鈕 */
     .btn-primary {
       width: 100%;
       background: var(--accent);
       color: #FFFFFF;
-      font-size: 1.15rem;
+      font-size: 1.12rem;
       font-weight: 700;
-      padding: 15px;
+      padding: 14px;
       border-radius: 12px;
       border: none;
       cursor: pointer;
@@ -163,7 +174,7 @@
       box-shadow: none;
     }
 
-    /* ──────── 階段二：故事序章・情境提問 ──────── */
+    /* 階段二：故事序章・情境提問 */
     .prompt-container {
       background: #FFFFFF;
       border: 1.5px solid var(--card-border);
@@ -207,19 +218,19 @@
       border-radius: 8px;
     }
 
-    /* ──────── 階段三：尾聲交割・斷捨離 ──────── */
+    /* 階段三：尾聲交割・暫存（3-6張）與取二捨一 */
     .category-tabs {
       display: flex;
       gap: 6px;
       overflow-x: auto;
-      padding-bottom: 8px;
+      padding-bottom: 6px;
       scrollbar-width: none;
     }
     .category-tabs::-webkit-scrollbar { display: none; }
     .cat-btn {
       flex: 0 0 auto;
-      padding: 8px 14px;
-      font-size: 0.95rem;
+      padding: 7px 13px;
+      font-size: 0.92rem;
       font-weight: 600;
       border-radius: 20px;
       border: 1px solid var(--card-border);
@@ -233,24 +244,25 @@
       border-color: var(--accent);
     }
 
-    /* 卡片列表：滿版、整張可點擊 */
     .card-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      margin-top: 6px;
-      flex: 1;
+      gap: 8px;
+      margin-top: 4px;
+      max-height: 28vh;
+      overflow-y: auto;
+      padding-right: 2px;
     }
     .card-row {
       background: var(--card-bg);
       border: 1.5px solid var(--card-border);
-      border-radius: 12px;
-      padding: 15px 16px;
+      border-radius: 10px;
+      padding: 12px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       cursor: pointer;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
       transition: all 0.15s ease;
     }
     .card-row:active {
@@ -258,21 +270,21 @@
     }
     .card-row.in-tray {
       border-color: var(--accent);
-      background: #F8F6F2;
+      background: #F4F1EA;
     }
     .card-title {
-      font-size: 1.15rem;
+      font-size: 1.05rem;
       font-weight: 700;
       color: var(--text-main);
       flex: 1;
-      padding-right: 12px;
-      line-height: 1.35;
+      padding-right: 10px;
+      line-height: 1.3;
     }
     .card-badge {
-      font-size: 0.88rem;
+      font-size: 0.82rem;
       font-weight: 600;
-      padding: 5px 11px;
-      border-radius: 16px;
+      padding: 4px 10px;
+      border-radius: 14px;
       background: #ECE7DD;
       color: #615A4F;
       white-space: nowrap;
@@ -282,66 +294,187 @@
       color: #FFFFFF;
     }
 
-    /* 候選盤 */
+    /* 暫存區（3-6張）與高辨識度取捨設計 */
     .tray-panel {
       background: #EFEBE4;
-      border: 1px dashed #D2C9BC;
+      border: 1.5px dashed #D2C9BC;
       border-radius: 14px;
-      padding: 12px 14px;
-      margin: 12px 0 10px 0;
+      padding: 12px 12px;
+      margin: 10px 0 8px 0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
     }
     .tray-header {
       display: flex;
       justify-content: space-between;
-      font-size: 0.95rem;
-      font-weight: 700;
-      color: var(--text-main);
+      align-items: center;
       margin-bottom: 8px;
     }
-    .tray-chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      min-height: 38px;
-      align-items: center;
+    .tray-title {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--text-main);
     }
-    .tray-chip {
-      font-size: 0.88rem;
-      font-weight: 600;
-      padding: 6px 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      border: 1px solid #CCC;
-      background: #FFF;
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .tray-count-tag {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: var(--highlight);
+      background: #E5DFC5;
+      padding: 3px 8px;
+      border-radius: 6px;
     }
-    .tray-chip.keep {
-      background: var(--keep-bg);
-      color: var(--keep);
-      border-color: #A5D6A7;
-    }
-    .tray-chip.discard {
-      background: var(--discard-bg);
-      color: var(--discard);
-      border-color: #EF9A9A;
-      text-decoration: line-through;
+    .tray-rule-tip {
+      font-size: 0.82rem;
+      color: var(--text-sub);
+      margin-bottom: 8px;
+      line-height: 1.35;
     }
 
-    /* ──────── 階段四：交付祝福・生命交割報告 ──────── */
+    .tray-items-container {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      overflow-y: auto;
+      max-height: 32vh;
+      flex: 1;
+    }
+
+    .tray-card-item {
+      background: #FFFFFF;
+      border-radius: 10px;
+      border: 1.5px solid #CCC;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+      transition: all 0.2s ease;
+    }
+
+    /* 四種鮮明辨識度狀態配色 */
+    .tray-card-item.status-take1 {
+      background: var(--take1-bg);
+      border-color: var(--take1-border);
+      box-shadow: 0 2px 8px rgba(27, 94, 32, 0.12);
+    }
+    .tray-card-item.status-take2 {
+      background: var(--take2-bg);
+      border-color: var(--take2-border);
+      box-shadow: 0 2px 8px rgba(0, 105, 92, 0.12);
+    }
+    .tray-card-item.status-discard {
+      background: var(--discard-bg);
+      border-color: var(--discard-border);
+      box-shadow: 0 2px 8px rgba(183, 28, 28, 0.12);
+    }
+    .tray-card-item.status-exclude {
+      background: var(--exclude-bg);
+      border-color: var(--exclude-border);
+      opacity: 0.88;
+    }
+
+    .tray-card-main {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .tray-card-name {
+      font-size: 1.02rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.3;
+      flex: 1;
+      padding-right: 8px;
+    }
+
+    .state-badge {
+      font-size: 0.85rem;
+      font-weight: 800;
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+    }
+    .status-take1 .state-badge {
+      background: var(--take1);
+      color: #FFFFFF;
+    }
+    .status-take2 .state-badge {
+      background: var(--take2);
+      color: #FFFFFF;
+    }
+    .status-discard .state-badge {
+      background: var(--discard);
+      color: #FFFFFF;
+    }
+    .status-exclude .state-badge {
+      background: #9E9E9E;
+      color: #FFFFFF;
+    }
+
+    .tray-action-group {
+      display: flex;
+      gap: 6px;
+      border-top: 1px solid rgba(0,0,0,0.06);
+      padding-top: 6px;
+    }
+    .action-pill-btn {
+      flex: 1;
+      padding: 5px 0;
+      font-size: 0.82rem;
+      font-weight: 700;
+      border-radius: 6px;
+      border: 1px solid #CCC;
+      background: #FFFFFF;
+      color: var(--text-sub);
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+    .action-pill-btn:active {
+      transform: scale(0.97);
+    }
+    .action-pill-btn.btn-take.active-take1 {
+      background: var(--take1);
+      color: #FFF;
+      border-color: var(--take1);
+    }
+    .action-pill-btn.btn-take.active-take2 {
+      background: var(--take2);
+      color: #FFF;
+      border-color: var(--take2);
+    }
+    .action-pill-btn.btn-discard.active-discard {
+      background: var(--discard);
+      color: #FFF;
+      border-color: var(--discard);
+    }
+    .action-pill-btn.btn-exclude.active-exclude {
+      background: #757575;
+      color: #FFF;
+      border-color: #757575;
+    }
+    .btn-remove {
+      flex: 0 0 32px;
+      background: #EFEBE4;
+      color: #8D857B;
+      border-color: #DDD4C6;
+    }
+
+    /* 階段四：交付祝福・生命交割報告 */
     .report-card {
       background: #FFFFFF;
       border: 1.5px solid var(--card-border);
       border-radius: 16px;
-      padding: 22px 18px;
+      padding: 20px 16px;
       box-shadow: 0 4px 16px rgba(0,0,0,0.04);
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
     .report-section-title {
-      font-size: 1rem;
+      font-size: 0.98rem;
       font-weight: 800;
       color: var(--text-main);
       display: flex;
@@ -355,27 +488,41 @@
       gap: 6px;
     }
     .report-item {
-      padding: 10px 14px;
+      padding: 12px 14px;
       border-radius: 8px;
       font-size: 1.05rem;
-      font-weight: 700;
-      line-height: 1.4;
+      font-weight: 800;
+      line-height: 1.35;
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .report-item.keep {
-      background: var(--keep-bg);
-      color: var(--keep);
-      border-left: 4px solid var(--keep);
+    .report-item.take1 {
+      background: var(--take1-bg);
+      color: var(--take1);
+      border-left: 4px solid var(--take1);
+    }
+    .report-item.take2 {
+      background: var(--take2-bg);
+      color: var(--take2);
+      border-left: 4px solid var(--take2);
     }
     .report-item.discard {
       background: var(--discard-bg);
       color: var(--discard);
       border-left: 4px solid var(--discard);
     }
+    .report-item.exclude {
+      background: var(--exclude-bg);
+      color: #616161;
+      border-left: 4px solid #9E9E9E;
+      font-size: 0.95rem;
+    }
     .blessing-box {
       background: #FAF7F2;
       border-radius: 10px;
       padding: 14px;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       color: #554D41;
       line-height: 1.6;
       border: 1px solid #E6DEC8;
@@ -386,7 +533,7 @@
 
   <div class="app-container">
 
-    <!-- ════════ 階段一：生命座標・序幕 ════════ -->
+    <!-- 階段一：生命座標・序幕 -->
     <section class="step-view active" id="view-step1">
       <div class="header-box">
         <div class="header-badge">生命座標 · 序幕</div>
@@ -431,7 +578,7 @@
       </div>
     </section>
 
-    <!-- ════════ 階段二：故事序章・情境提問 ════════ -->
+    <!-- 階段二：故事序章・情境提問 -->
     <section class="step-view" id="view-step2">
       <div class="header-box">
         <div class="header-badge">故事序章 · 坐標已定</div>
@@ -448,18 +595,17 @@
       </div>
 
       <div class="footer-btn-wrapper">
-        <button class="btn-primary" onclick="goToStep(3)">對話沉澱 · 進入行囊交割</button>
+        <button class="btn-primary" onclick="goToStep(3)">對話沉澱 · 進入暫存與交割</button>
       </div>
     </section>
 
-    <!-- ════════ 階段三：尾聲交割・斷捨離 ════════ -->
+    <!-- 階段三：尾聲交割・暫存（3-6張）與取二捨一 -->
     <section class="step-view" id="view-step3">
       <div class="header-box">
         <div class="header-badge">尾聲交割 · 斷捨離</div>
-        <h1 class="header-title">挑出 4-6 張放進候選盤，再做二留一捨</h1>
+        <h1 class="header-title">暫存 3-6 張，終極帶走兩個、丟棄一個</h1>
       </div>
 
-      <!-- 分類標籤 -->
       <div class="category-tabs" id="catTabs">
         <button class="cat-btn active" onclick="switchCategory('自主與動機')">自主與動機</button>
         <button class="cat-btn" onclick="switchCategory('面具與防衛')">面具與防衛</button>
@@ -468,24 +614,30 @@
         <button class="cat-btn" onclick="switchCategory('存在與意義')">存在與意義</button>
       </div>
 
-      <!-- 卡片清單（原汁原味） -->
       <div class="card-list" id="cardListContainer"></div>
 
-      <!-- 行囊候選盤 -->
       <div class="tray-panel">
         <div class="tray-header">
-          <span>🎒 行囊候選盤（點擊卡片切換：留／捨）</span>
-          <span id="trayCounter">0 / 4-6 張</span>
+          <span class="tray-title">🎒 行囊暫存池</span>
+          <span class="tray-count-tag" id="trayCounter">暫存 0 / 3-6 張</span>
         </div>
-        <div class="tray-chips" id="trayChips">
-          <span style="font-size:0.85rem; color:var(--text-muted);">請由上方點選 4-6 張有共鳴的卡片加入候選</span>
+        <p class="tray-rule-tip" id="trayStatusHint">
+          請先由上方挑選 3-6 張卡片放入暫存，再指派【取1】、【取2】與【捨】。
+        </p>
+
+        <div class="tray-items-container" id="trayItemsContainer">
+          <div style="font-size:0.88rem; color:var(--text-muted); text-align:center; padding:16px;">
+            尚未加入任何卡片至暫存區
+          </div>
         </div>
       </div>
 
-      <button class="btn-primary" id="btn-to-step4" disabled onclick="goToStep(4)">確認行囊 · 交付祝福</button>
+      <button class="btn-primary" id="btn-to-step4" disabled onclick="goToStep(4)">
+        確認行囊 · 交付祝福（二留一捨）
+      </button>
     </section>
 
-    <!-- ════════ 階段四：交付祝福・生命交割報告（徹底告別卡死） ════════ -->
+    <!-- 階段四：交付祝福・生命交割報告 -->
     <section class="step-view" id="view-step4">
       <div class="header-box">
         <div class="header-badge">交付祝福 · 儀式完成</div>
@@ -495,18 +647,23 @@
 
       <div class="report-card">
         <div>
-          <div class="report-section-title">🌿 留下的行囊（前行的底氣）</div>
-          <div class="report-list" id="keepList"></div>
+          <div class="report-section-title">🌿 帶走的生命行囊（取二 · 核心底氣）</div>
+          <div class="report-list" id="reportTakesList"></div>
         </div>
 
         <div>
-          <div class="report-section-title">🕊️ 捨下的防衛（感謝並告別）</div>
-          <div class="report-list" id="discardList"></div>
+          <div class="report-section-title">🕊️ 丟棄的防衛包袱（捨一 · 感謝告別）</div>
+          <div class="report-list" id="reportDiscardList"></div>
+        </div>
+
+        <div id="reportExcludeSection">
+          <div class="report-section-title">📦 暫存不納入（封存沉澱）</div>
+          <div class="report-list" id="reportExcludeList"></div>
         </div>
 
         <div class="blessing-box">
           <b>局內人寄語：</b><br>
-          捨下的不是缺點，而是曾經保護過你、但如今已沉重的防衛鎧甲；留下的則是陪伴你開啟下一局的真實底氣。願你在新的坐標裡，輕裝前行。
+          在無數念頭與防衛之中，你精準帶走了兩份真實底氣，果斷丟棄了一件沉重鎧甲。取捨之間，局已明朗。願你輕裝上陣，落子無悔。
         </div>
       </div>
 
@@ -519,13 +676,12 @@
   </div>
 
   <script>
-    // ──────── 狀態管理 ────────
     let selectedTime = null;
     let selectedFocus = null;
     let currentCategory = "自主與動機";
-    let selectedTray = {}; // { [cardTitle]: 'keep' | 'discard' }
 
-    // ──────── 題庫資料（還原原汁原味簡潔命名） ────────
+    let trayMap = new Map();
+
     const cardsDB = {
       "自主與動機": [
         "掌控生活節奏的自主權",
@@ -583,7 +739,6 @@
       "未來_最想做的事": "「在下一個生命篇章中，哪一個願景讓你哪怕害怕也願意啟程？」"
     };
 
-    // ──────── 階段一邏輯 ────────
     function selectTime(el, val) {
       document.querySelectorAll('#view-step1 .coord-grid:nth-of-type(1) .coord-card').forEach(c => c.classList.remove('selected'));
       el.classList.add('selected');
@@ -599,18 +754,15 @@
     }
 
     function checkStep1Ready() {
-      const ready = selectedTime && selectedFocus;
-      document.getElementById('btn-to-step2').disabled = !ready;
+      document.getElementById('btn-to-step2').disabled = !(selectedTime && selectedFocus);
     }
 
-    // ──────── 頁面切換 ────────
     function goToStep(stepNum) {
       document.querySelectorAll('.step-view').forEach(v => v.classList.remove('active'));
       const target = document.getElementById(`view-step${stepNum}`);
       if (target) target.classList.add('active');
 
       if (stepNum === 2) {
-        // 設定階段二的情境提問
         const coordKey = `${selectedTime}_${selectedFocus}`;
         const qText = coordQuestions[coordKey] || "「在這個生命座標下，靜下心來，聊聊你最深處的體會。」";
         document.getElementById('display-coord').innerText = `生命坐標：${selectedTime} × ${selectedFocus}`;
@@ -624,7 +776,6 @@
       window.scrollTo(0, 0);
     }
 
-    // ──────── 階段三邏輯 ────────
     function switchCategory(cat) {
       currentCategory = cat;
       document.querySelectorAll('.cat-btn').forEach(b => {
@@ -639,130 +790,247 @@
       const list = cardsDB[currentCategory] || [];
 
       list.forEach(title => {
-        const isInTray = !!selectedTray[title];
+        const inTray = trayMap.has(title);
         const row = document.createElement('div');
-        row.className = `card-row ${isInTray ? 'in-tray' : ''}`;
+        row.className = `card-row ${inTray ? 'in-tray' : ''}`;
         row.innerHTML = `
           <span class="card-title">${title}</span>
-          <span class="card-badge">${isInTray ? '已在候選' : '+ 加入'}</span>
+          <span class="card-badge">${inTray ? '已在暫存' : '+ 放入暫存'}</span>
         `;
-        row.onclick = () => toggleTrayCard(title);
+        row.onclick = () => toggleAddToTray(title);
         container.appendChild(row);
       });
     }
 
-    function toggleTrayCard(title) {
-      if (selectedTray[title]) {
-        delete selectedTray[title];
+    function toggleAddToTray(title) {
+      if (trayMap.has(title)) {
+        trayMap.delete(title);
       } else {
-        const count = Object.keys(selectedTray).length;
-        if (count >= 6) {
-          alert("候選盤最多挑選 6 張卡片進行二留一捨喔！");
+        if (trayMap.size >= 6) {
+          alert("暫存池最多放入 6 張卡片進行抉擇喔！");
           return;
         }
-        selectedTray[title] = 'keep'; // 預設為留
+        trayMap.set(title, 'exclude');
       }
+      rebalanceTakes();
       renderCards();
       renderTray();
     }
 
-    function toggleChipStatus(title) {
-      if (selectedTray[title] === 'keep') {
-        selectedTray[title] = 'discard';
-      } else {
-        selectedTray[title] = 'keep';
+    function setItemStatus(title, targetAction) {
+      const current = trayMap.get(title);
+
+      if (targetAction === 'take') {
+        if (current === 'take1' || current === 'take2') {
+          trayMap.set(title, 'exclude');
+        } else {
+          const takes = getItemsByStatus(['take1', 'take2']);
+          if (takes.length >= 2) {
+            alert("已選定 2 個帶走的行囊！若要更換，請先取消現有取1或取2。");
+            return;
+          }
+          trayMap.set(title, 'take_pending');
+        }
+      } else if (targetAction === 'discard') {
+        if (current === 'discard') {
+          trayMap.set(title, 'exclude');
+        } else {
+          for (let [k, v] of trayMap.entries()) {
+            if (v === 'discard') trayMap.set(k, 'exclude');
+          }
+          trayMap.set(title, 'discard');
+        }
+      } else if (targetAction === 'exclude') {
+        trayMap.set(title, 'exclude');
       }
+
+      rebalanceTakes();
       renderTray();
     }
 
-    function renderTray() {
-      const keys = Object.keys(selectedTray);
-      const count = keys.length;
-      document.getElementById('trayCounter').innerText = `${count} / 4-6 張`;
+    function removeCardFromTray(title) {
+      trayMap.delete(title);
+      rebalanceTakes();
+      renderCards();
+      renderTray();
+    }
 
-      const trayChips = document.getElementById('trayChips');
+    function rebalanceTakes() {
+      let takeList = [];
+      for (let [title, status] of trayMap.entries()) {
+        if (status === 'take1' || status === 'take2' || status === 'take_pending') {
+          takeList.push(title);
+        }
+      }
+
+      takeList.forEach((title, idx) => {
+        if (idx === 0) trayMap.set(title, 'take1');
+        else if (idx === 1) trayMap.set(title, 'take2');
+        else trayMap.set(title, 'exclude');
+      });
+    }
+
+    function getItemsByStatus(statusArr) {
+      let res = [];
+      for (let [title, status] of trayMap.entries()) {
+        if (statusArr.includes(status)) res.push({ title, status });
+      }
+      return res;
+    }
+
+    function renderTray() {
+      const count = trayMap.size;
+      const counterEl = document.getElementById('trayCounter');
+      counterEl.innerText = `暫存 ${count} / 3-6 張`;
+
+      const container = document.getElementById('trayItemsContainer');
+      const hintEl = document.getElementById('trayStatusHint');
+      const confirmBtn = document.getElementById('btn-to-step4');
+
       if (count === 0) {
-        trayChips.innerHTML = `<span style="font-size:0.85rem; color:var(--text-muted);">請由上方點選 4-6 張有共鳴的卡片加入候選</span>`;
-        document.getElementById('btn-to-step4').disabled = true;
-        document.getElementById('btn-to-step4').innerText = "確認行囊 · 交付祝福";
+        container.innerHTML = `<div style="font-size:0.88rem; color:var(--text-muted); text-align:center; padding:16px;">尚未加入任何卡片至暫存區</div>`;
+        confirmBtn.disabled = true;
+        confirmBtn.innerText = "確認行囊 · 交付祝福（二留一捨）";
+        hintEl.innerHTML = "請先由上方挑選 <b>3-6 張</b> 卡片放入暫存，再指派【取1】、【取2】與【捨】。";
         return;
       }
 
-      trayChips.innerHTML = "";
-      keys.forEach(title => {
-        const status = selectedTray[title];
-        const chip = document.createElement('div');
-        chip.className = `tray-chip ${status}`;
-        chip.innerHTML = `<b>${status === 'keep' ? '留' : '捨'}</b> ${title}`;
-        chip.onclick = () => toggleChipStatus(title);
-        trayChips.appendChild(chip);
+      container.innerHTML = "";
+
+      let takeCount = 0, discardCount = 0;
+
+      trayMap.forEach((status, title) => {
+        if (status === 'take1' || status === 'take2') takeCount++;
+        if (status === 'discard') discardCount++;
+
+        let badgeText = "⚪ 不納入";
+        if (status === 'take1') badgeText = "🌿 取 1（帶走）";
+        if (status === 'take2') badgeText = "🌿 取 2（帶走）";
+        if (status === 'discard') badgeText = "🕊️ 捨（丟棄）";
+
+        const cardItem = document.createElement('div');
+        cardItem.className = `tray-card-item status-${status}`;
+        cardItem.innerHTML = `
+          <div class="tray-card-main">
+            <span class="tray-card-name">${title}</span>
+            <span class="state-badge">${badgeText}</span>
+          </div>
+          <div class="tray-action-group">
+            <button class="action-pill-btn btn-take ${status === 'take1' ? 'active-take1' : (status === 'take2' ? 'active-take2' : '')}" 
+                    onclick="setItemStatus('${title}', 'take')">
+              ${status === 'take1' ? '✓ 取 1' : (status === 'take2' ? '✓ 取 2' : '+ 帶走(取)')}
+            </button>
+            <button class="action-pill-btn btn-discard ${status === 'discard' ? 'active-discard' : ''}" 
+                    onclick="setItemStatus('${title}', 'discard')">
+              ${status === 'discard' ? '✓ 已捨' : '× 丟棄(捨)'}
+            </button>
+            <button class="action-pill-btn btn-exclude ${status === 'exclude' ? 'active-exclude' : ''}" 
+                    onclick="setItemStatus('${title}', 'exclude')">
+              不納入
+            </button>
+            <button class="action-pill-btn btn-remove" title="移出暫存" onclick="removeCardFromTray('${title}')">
+              ✕
+            </button>
+          </div>
+        `;
+        container.appendChild(cardItem);
       });
 
-      const keeps = Object.values(selectedTray).filter(v => v === 'keep').length;
-      const discards = Object.values(selectedTray).filter(v => v === 'discard').length;
+      const countValid = count >= 3 && count <= 6;
+      const takesValid = takeCount === 2;
+      const discardValid = discardCount === 1;
 
-      // 嚴格判斷：總數 4~6 張，且必須有留有捨
-      const isValid = (count >= 4 && count <= 6 && keeps >= 1 && discards >= 1);
-      const btn = document.getElementById('btn-to-step4');
-      btn.disabled = !isValid;
+      confirmBtn.disabled = !(countValid && takesValid && discardValid);
 
-      if (count < 4) {
-        btn.innerText = `還需挑選 ${4 - count} 張卡片`;
-      } else if (discards === 0) {
-        btn.innerText = "請點擊卡片做「二留一捨」（標記至少一張捨）";
-      } else if (keeps === 0) {
-        btn.innerText = "請點擊卡片標記保留的行囊";
+      if (!countValid) {
+        hintEl.innerHTML = `<span style="color:#B71C1C;">⚠️ 暫存區目前 ${count} 張，請維持在 <b>3-6 張</b> 之間。</span>`;
+        confirmBtn.innerText = count < 3 ? `還需選入 ${3 - count} 張至暫存` : `請減少暫存卡片至 6 張以內`;
+      } else if (!takesValid && !discardValid) {
+        hintEl.innerHTML = `進度：帶走 <b>${takeCount}/2</b>、丟棄 <b>${discardCount}/1</b>。請設定取捨。`;
+        confirmBtn.innerText = "請完成「帶走兩個、丟棄一個」";
+      } else if (!takesValid) {
+        hintEl.innerHTML = `已標記丟棄 1 個。還需標記 <b>${2 - takeCount} 個帶走</b>。`;
+        confirmBtn.innerText = `還需指定 ${2 - takeCount} 個帶走（取1/取2）`;
+      } else if (!discardValid) {
+        hintEl.innerHTML = `已標記帶走 2 個。還需標記 <b>1 個丟棄（捨）</b>。`;
+        confirmBtn.innerText = "請指定 1 個丟棄的包袱（捨）";
       } else {
-        btn.innerText = "確認行囊 · 交付祝福";
+        hintEl.innerHTML = `<span style="color:var(--take1); font-weight:800;">✓ 取捨完成！成功鎖定帶走兩個（取1、取2）、丟棄一個（捨）。</span>`;
+        confirmBtn.innerText = "確認行囊 · 交付祝福（二留一捨）";
       }
     }
 
-    // ──────── 階段四邏輯 ────────
     function renderReport() {
       document.getElementById('reportCoordTitle').innerText = `生命坐標：${selectedTime} × ${selectedFocus}`;
 
-      const keepContainer = document.getElementById('keepList');
-      const discardContainer = document.getElementById('discardList');
-      keepContainer.innerHTML = "";
-      discardContainer.innerHTML = "";
+      const takesContainer = document.getElementById('reportTakesList');
+      const discardContainer = document.getElementById('reportDiscardList');
+      const excludeContainer = document.getElementById('reportExcludeList');
+      const excludeSection = document.getElementById('reportExcludeSection');
 
-      Object.entries(selectedTray).forEach(([title, status]) => {
+      takesContainer.innerHTML = "";
+      discardContainer.innerHTML = "";
+      excludeContainer.innerHTML = "";
+
+      let hasExclude = false;
+
+      trayMap.forEach((status, title) => {
         const item = document.createElement('div');
-        item.className = `report-item ${status}`;
-        item.innerText = (status === 'keep' ? '✓ ' : '✕ ') + title;
-        if (status === 'keep') {
-          keepContainer.appendChild(item);
-        } else {
+        if (status === 'take1') {
+          item.className = 'report-item take1';
+          item.innerHTML = `<b>【取 1】</b> ${title}`;
+          takesContainer.appendChild(item);
+        } else if (status === 'take2') {
+          item.className = 'report-item take2';
+          item.innerHTML = `<b>【取 2】</b> ${title}`;
+          takesContainer.appendChild(item);
+        } else if (status === 'discard') {
+          item.className = 'report-item discard';
+          item.innerHTML = `<b>【捨】</b> ${title}`;
           discardContainer.appendChild(item);
+        } else if (status === 'exclude') {
+          hasExclude = true;
+          item.className = 'report-item exclude';
+          item.innerHTML = `<b>【不納入】</b> ${title}`;
+          excludeContainer.appendChild(item);
         }
       });
+
+      excludeSection.style.display = hasExclude ? "block" : "none";
     }
 
     function copyResult() {
-      const keeps = Object.keys(selectedTray).filter(k => selectedTray[k] === 'keep');
-      const discards = Object.keys(selectedTray).filter(k => selectedTray[k] === 'discard');
+      let t1 = "", t2 = "", disc = "";
+      let excludes = [];
+
+      trayMap.forEach((status, title) => {
+        if (status === 'take1') t1 = title;
+        if (status === 'take2') t2 = title;
+        if (status === 'discard') disc = title;
+        if (status === 'exclude') excludes.push(title);
+      });
 
       const text = `【局內人圖籤 · 生命交割報告】\n` +
                    `生命座標：${selectedTime} × ${selectedFocus}\n\n` +
-                   `🌿 留下的行囊（前行底氣）：\n${keeps.map(k => ' • ' + k).join('\n')}\n\n` +
-                   `🕊️ 捨下的防衛（感謝並告別）：\n${discards.map(d => ' • ' + d).join('\n')}\n\n` +
+                   `🌿 帶走的生命行囊（取二 · 核心底氣）：\n • 【取 1】${t1}\n • 【取 2】${t2}\n\n` +
+                   `🕊️ 丟棄的防衛包袱（捨一 · 感謝告別）：\n • 【捨】${disc}\n\n` +
+                   (excludes.length > 0 ? `📦 暫存不納入（封存沉澱）：\n${excludes.map(e => ' • ' + e).join('\n')}\n\n` : '') +
                    `— 來自 大大觀察家 · 局內人圖籤`;
 
       navigator.clipboard.writeText(text).then(() => {
-        alert("交割紀錄已複製至剪貼簿！可直接貼給訪談者或存入檔案。");
+        alert("交割紀錄已複製至剪貼簿！");
       });
     }
 
     function restartAll() {
       selectedTime = null;
       selectedFocus = null;
-      selectedTray = {};
+      trayMap.clear();
       document.querySelectorAll('.coord-card').forEach(c => c.classList.remove('selected'));
       checkStep1Ready();
       goToStep(1);
     }
 
-    // 初始化渲染
     renderCards();
   </script>
 </body>
