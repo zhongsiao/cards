@@ -8,13 +8,14 @@
     :root {
       --bg: #F7F5F0;
       --card-bg: #FFFFFF;
-      --card-border: #E0D9CD;
+      --card-border: #DFD8CC;
       --text-main: #242220;
       --text-sub: #6E685F;
       --text-muted: #9E988F;
       --accent: #2B2A28;
       --highlight: #8B4513;
 
+      /* 四態配色 */
       --take1: #1B5E20;
       --take1-bg: #EAF4EC;
       --take1-border: #2E7D32;
@@ -35,7 +36,6 @@
       --safe-bottom: env(safe-area-inset-bottom, 16px);
     }
 
-    /* 徹底禁止長按選取文字、反白彈窗，保證點擊 100% 響應 */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -43,8 +43,6 @@
       -webkit-tap-highlight-color: transparent;
       user-select: none;
       -webkit-user-select: none;
-      -webkit-touch-callout: none;
-      touch-action: manipulation;
     }
 
     body {
@@ -72,7 +70,7 @@
       flex-direction: column;
       flex: 1;
       width: 100%;
-      animation: fadeIn 0.22s ease-out;
+      animation: fadeIn 0.2s ease-out;
     }
     .step-view.active {
       display: flex;
@@ -83,7 +81,7 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* 頂部 Header 通用（緊湊高雅） */
+    /* 頂部 Header 通用 */
     .header-box {
       text-align: center;
       margin-bottom: 12px;
@@ -108,12 +106,18 @@
       margin-top: 3px;
     }
 
-    /* ──────── 階段一：生命座標・翻牌 ──────── */
+    /* ──────── 階段一：生命座標・翻牌（保證全在一屏，原生 button，100% 響應） ──────── */
     .coord-section {
       display: flex;
       flex-direction: column;
       gap: 4px;
       margin-bottom: 14px;
+    }
+    .coord-group-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
     }
     .coord-group-title {
       font-size: 0.95rem;
@@ -122,15 +126,28 @@
       display: flex;
       align-items: center;
       gap: 6px;
-      margin-bottom: 6px;
     }
+    .coord-status-badge {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: var(--highlight);
+      background: #EAE3D5;
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .coord-status-badge.done {
+      color: var(--take1);
+      background: var(--take1-bg);
+    }
+
     .coord-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
       gap: 10px;
     }
 
-    .coord-card {
+    /* 原生 Button 實現卡牌，保證點擊必響應 */
+    button.coord-card {
       background: #FFFFFF;
       border: 2px solid var(--card-border);
       border-radius: 12px;
@@ -138,48 +155,49 @@
       text-align: center;
       cursor: pointer;
       box-shadow: 0 3px 8px rgba(0,0,0,0.04);
-      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       min-height: 86px;
       position: relative;
+      outline: none;
+      -webkit-appearance: none;
     }
-    .coord-card:active {
+    button.coord-card:active {
       transform: scale(0.96);
-    }
-    .coord-card * {
-      pointer-events: none;
     }
 
     .coord-name {
-      font-size: 1.12rem;
+      font-size: 1.15rem;
       font-weight: 800;
       color: var(--text-main);
       line-height: 1.2;
+      pointer-events: none;
     }
     .coord-hint {
-      font-size: 0.76rem;
+      font-size: 0.78rem;
       color: var(--text-sub);
       margin-top: 5px;
       font-weight: 600;
+      pointer-events: none;
     }
 
-    .coord-card.selected {
+    /* 翻牌選中狀態：深邃黑底、發光、微幅浮起 */
+    button.coord-card.selected {
       background: var(--accent) !important;
       border-color: var(--accent) !important;
-      color: #FFFFFF !important;
-      box-shadow: 0 6px 16px rgba(43, 42, 40, 0.3) !important;
+      box-shadow: 0 6px 18px rgba(43, 42, 40, 0.3) !important;
       transform: translateY(-2px) scale(1.02);
     }
-    .coord-card.selected .coord-name {
+    button.coord-card.selected .coord-name {
       color: #FFFFFF !important;
     }
-    .coord-card.selected .coord-hint {
-      color: #E0DAD1 !important;
+    button.coord-card.selected .coord-hint {
+      color: #E2DBD0 !important;
     }
-    .coord-card.selected::after {
+    button.coord-card.selected::after {
       content: "✓ 翻開";
       position: absolute;
       top: 4px;
@@ -195,9 +213,10 @@
       padding-top: 10px;
     }
 
+    /* 通用按鈕（永遠可點擊，未達標時溫和提醒，不鎖死） */
     .btn-primary {
       width: 100%;
-      background: var(--accent);
+      background: #8F887D;
       color: #FFFFFF;
       font-size: 1.12rem;
       font-weight: 800;
@@ -205,18 +224,17 @@
       border-radius: 12px;
       border: none;
       cursor: pointer;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.14);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       transition: all 0.15s ease;
       text-align: center;
+      outline: none;
+    }
+    .btn-primary.ready {
+      background: var(--accent);
+      box-shadow: 0 4px 14px rgba(43, 42, 40, 0.25);
     }
     .btn-primary:active {
       transform: scale(0.99);
-    }
-    .btn-primary:disabled {
-      background: #C7C1B8;
-      cursor: not-allowed;
-      box-shadow: none;
-      opacity: 0.8;
     }
 
     /* ──────── 階段二：故事序章・情境提問 ──────── */
@@ -490,7 +508,7 @@
 
   <div class="app-container">
 
-    <!-- 階段一：生命座標・翻牌 -->
+    <!-- ════════ 階段一：生命座標・翻牌 ════════ -->
     <section class="step-view active" id="view-step1">
       <div class="header-box">
         <div class="header-badge">生命座標 · 序幕</div>
@@ -499,49 +517,55 @@
       </div>
 
       <div class="coord-section">
-        <div class="coord-group-title">⌛ 橫軸：時空維度</div>
+        <div class="coord-group-header">
+          <span class="coord-group-title">⌛ 橫軸：時空維度</span>
+          <span class="coord-status-badge" id="badge-time">待翻開</span>
+        </div>
         <div class="coord-grid" id="grid-time">
-          <div class="coord-card" onclick="selectTime(this, '過去')">
+          <button type="button" class="coord-card" data-val="過去">
             <span class="coord-name">過去</span>
             <span class="coord-hint">回溯痕跡</span>
-          </div>
-          <div class="coord-card" onclick="selectTime(this, '現在')">
+          </button>
+          <button type="button" class="coord-card" data-val="現在">
             <span class="coord-name">現在</span>
             <span class="coord-hint">當下體感</span>
-          </div>
-          <div class="coord-card" onclick="selectTime(this, '未來')">
+          </button>
+          <button type="button" class="coord-card" data-val="未來">
             <span class="coord-name">未來</span>
             <span class="coord-hint">前行預盼</span>
-          </div>
+          </button>
         </div>
       </div>
 
       <div class="coord-section">
-        <div class="coord-group-title">🎯 縱軸：心性焦點</div>
+        <div class="coord-group-header">
+          <span class="coord-group-title">🎯 縱軸：心性焦點</span>
+          <span class="coord-status-badge" id="badge-focus">待翻開</span>
+        </div>
         <div class="coord-grid" id="grid-focus">
-          <div class="coord-card" onclick="selectFocus(this, '最滿意的事')">
+          <button type="button" class="coord-card" data-val="最滿意的事">
             <span class="coord-name">最滿意的事</span>
             <span class="coord-hint">力量來源</span>
-          </div>
-          <div class="coord-card" onclick="selectFocus(this, '最大的困難')">
+          </button>
+          <button type="button" class="coord-card" data-val="最大的困難">
             <span class="coord-name">最大的困難</span>
             <span class="coord-hint">卡點破局</span>
-          </div>
-          <div class="coord-card" onclick="selectFocus(this, '最想做的事')">
+          </button>
+          <button type="button" class="coord-card" data-val="最想做的事">
             <span class="coord-name">最想做的事</span>
             <span class="coord-hint">心之所向</span>
-          </div>
+          </button>
         </div>
       </div>
 
       <div class="footer-btn-wrapper">
-        <button class="btn-primary" id="btn-to-step2" disabled onclick="goToStep(2)">
-          開牌 · 故事開始
+        <button type="button" class="btn-primary" id="btn-to-step2" onclick="handleStep1Submit()">
+          請翻開上下各一張牌
         </button>
       </div>
     </section>
 
-    <!-- 階段二：故事序章・情境提問 -->
+    <!-- ════════ 階段二：故事序章・情境提問 ════════ -->
     <section class="step-view" id="view-step2">
       <div class="header-box">
         <div class="header-badge">故事序章 · 坐標已定</div>
@@ -558,11 +582,13 @@
       </div>
 
       <div class="footer-btn-wrapper">
-        <button class="btn-primary" onclick="goToStep(3)">對話沉澱 · 挑選共鳴圖籤</button>
+        <button type="button" class="btn-primary ready" onclick="goToStep(3)">
+          對話沉澱 · 挑選共鳴圖籤 ➔
+        </button>
       </div>
     </section>
 
-    <!-- 階段三：海選卡片（滿版大字體，挑 3-6 張） -->
+    <!-- ════════ 階段三：海選卡片（滿版大字體，挑 3-6 張） ════════ -->
     <section class="step-view" id="view-step3">
       <div class="header-box">
         <div class="header-badge">尾聲交割 · 共鳴初選</div>
@@ -571,23 +597,23 @@
       </div>
 
       <div class="category-tabs" id="catTabs">
-        <button class="cat-btn active" onclick="switchCategory('自主與動機')">自主與動機</button>
-        <button class="cat-btn" onclick="switchCategory('面具與防衛')">面具與防衛</button>
-        <button class="cat-btn" onclick="switchCategory('邊界與課題')">邊界與課題</button>
-        <button class="cat-btn" onclick="switchCategory('損失與權衡')">損失與權衡</button>
-        <button class="cat-btn" onclick="switchCategory('存在與意義')">存在與意義</button>
+        <button type="button" class="cat-btn active" onclick="switchCategory('自主與動機')">自主與動機</button>
+        <button type="button" class="cat-btn" onclick="switchCategory('面具與防衛')">面具與防衛</button>
+        <button type="button" class="cat-btn" onclick="switchCategory('邊界與課題')">邊界與課題</button>
+        <button type="button" class="cat-btn" onclick="switchCategory('損失與權衡')">損失與權衡</button>
+        <button type="button" class="cat-btn" onclick="switchCategory('存在與意義')">存在與意義</button>
       </div>
 
       <div class="card-list-full" id="cardListContainer"></div>
 
       <div class="footer-btn-wrapper">
-        <button class="btn-primary" id="btn-to-decision" disabled onclick="goToDecisionStep()">
+        <button type="button" class="btn-primary" id="btn-to-decision" onclick="goToDecisionStep()">
           進入取捨 (已選 0 / 3-6 張)
         </button>
       </div>
     </section>
 
-    <!-- 階段三・五：終極取捨（全螢幕聚焦，點擊切換，零滑動） -->
+    <!-- ════════ 階段三・五：終極取捨（全螢幕聚焦，點擊卡片循環切換，零滑動） ════════ -->
     <section class="step-view" id="view-decision">
       <div class="header-box">
         <div class="header-badge">行囊終極交割</div>
@@ -598,14 +624,14 @@
       <div class="decision-list" id="decisionListContainer"></div>
 
       <div class="footer-btn-wrapper" style="display:flex; flex-direction:column; gap:6px;">
-        <button class="btn-primary" id="btn-to-step4" disabled onclick="goToStep(4)">
+        <button type="button" class="btn-primary" id="btn-to-step4" onclick="handleDecisionSubmit()">
           確認行囊 · 交付祝福（二留一捨）
         </button>
-        <button class="back-link-btn" onclick="goToStep(3)">← 返回調整挑選的卡片</button>
+        <button type="button" class="back-link-btn" onclick="goToStep(3)">← 返回調整挑選的卡片</button>
       </div>
     </section>
 
-    <!-- 階段四：生命交割報告 -->
+    <!-- ════════ 階段四：生命交割報告 ════════ -->
     <section class="step-view" id="view-step4">
       <div class="header-box">
         <div class="header-badge">交付祝福 · 儀式完成</div>
@@ -636,8 +662,8 @@
       </div>
 
       <div class="footer-btn-wrapper" style="display:flex; flex-direction:column; gap:8px;">
-        <button class="btn-primary" onclick="copyResult()">📋 複製交割紀錄</button>
-        <button class="btn-primary" style="background:#5C554B;" onclick="restartAll()">🔄 重新整理開局</button>
+        <button type="button" class="btn-primary ready" onclick="copyResult()">📋 複製交割紀錄</button>
+        <button type="button" class="btn-primary" style="background:#5C554B;" onclick="restartAll()">🔄 重新整理開局</button>
       </div>
     </section>
 
@@ -708,30 +734,6 @@
     };
 
     // ──────── 階段一：精準且互斥的卡牌翻牌 ────────
-    function selectTime(el, val) {
-      document.querySelectorAll('#grid-time .coord-card').forEach(c => c.classList.remove('selected'));
-      el.classList.add('selected');
-      selectedTime = val;
-      checkStep1Ready();
-    }
-
-    function selectFocus(el, val) {
-      document.querySelectorAll('#grid-focus .coord-card').forEach(c => c.classList.remove('selected'));
-      el.classList.add('selected');
-      selectedFocus = val;
-      checkStep1Ready();
-    }
-
-    function checkStep1Ready() {
-      const btn = document.getElementById('btn-to-step2');
-      if (selectedTime && selectedFocus) {
-        btn.disabled = false;
-        btn.innerText = `開牌 · 故事開始（${selectedTime} × ${selectedFocus}）➔`;
-      } else {
-        btn.disabled = true;
-        btn.innerText = "開牌 · 故事開始";
-      }
-    }
-
-    // ──────── 頁面導航 ────────
-   
+    document.querySelectorAll('#grid-time .coord-card').forEach(btn => {
+      btn.addEventListener('click', function(e) {
+        document.querySelectorAll('#grid-time .coord
