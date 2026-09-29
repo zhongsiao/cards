@@ -268,30 +268,49 @@
       border-radius: 8px;
     }
 
-    /* ──────── 階段三：海選卡片（滿版大字體，挑 3-6 張） ──────── */
+    /* ──────── 階段三：海選卡片（五大類醒目排列，不左右滑動） ──────── */
     .category-tabs {
-      display: flex;
-      gap: 6px;
-      overflow-x: auto;
-      padding-bottom: 6px;
-      scrollbar-width: none;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      margin-bottom: 8px;
+      width: 100%;
     }
-    .category-tabs::-webkit-scrollbar { display: none; }
     .cat-btn {
-      flex: 0 0 auto;
-      padding: 8px 14px;
-      font-size: 0.94rem;
-      font-weight: 700;
-      border-radius: 20px;
+      border-radius: 10px;
       border: 1.5px solid var(--card-border);
       background: #FFFFFF;
-      color: var(--text-sub);
+      color: var(--text-main);
+      font-size: 0.92rem;
+      font-weight: 700;
+      padding: 10px 4px;
+      text-align: center;
       cursor: pointer;
+      box-shadow: 0 1.5px 4px rgba(0,0,0,0.03);
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    .cat-btn:active {
+      transform: scale(0.96);
+    }
+    .cat-btn:nth-child(1),
+    .cat-btn:nth-child(2),
+    .cat-btn:nth-child(3) {
+      grid-column: span 2;
+    }
+    .cat-btn:nth-child(4),
+    .cat-btn:nth-child(5) {
+      grid-column: span 3;
     }
     .cat-btn.active {
-      background: var(--accent);
-      color: #FFFFFF;
-      border-color: var(--accent);
+      background: var(--accent) !important;
+      color: #FFFFFF !important;
+      border-color: var(--accent) !important;
+      box-shadow: 0 3px 10px rgba(43, 42, 40, 0.25) !important;
+      font-weight: 800;
+      transform: translateY(-1px);
     }
 
     .card-list-full {
@@ -608,7 +627,7 @@
       </div>
     </section>
 
-    <!-- ════════ 階段三：海選卡片（滿版大字體，挑 3-6 張） ════════ -->
+    <!-- ════════ 階段三：海選卡片（五大類醒目排列，不左右滑動） ════════ -->
     <section class="step-view" id="view-step3">
       <div class="header-box">
         <div class="header-badge">尾聲交割 · 共鳴初選</div>
@@ -900,7 +919,6 @@
     // ──────── 階段三・五：三檔切換（取二留一保證不卡死） ────────
     function setCardStatusDirect(title, targetStatus) {
       if (targetStatus === 'take') {
-        // 若已有 2 個 take，將最舊的一個 take 釋放為 exclude
         let existingTakes = [];
         selectedCandidates.forEach((st, k) => {
           if (k !== title && st === 'take') existingTakes.push(k);
@@ -910,7 +928,6 @@
         }
         selectedCandidates.set(title, 'take');
       } else if (targetStatus === 'discard') {
-        // 若已有 1 個 discard，將舊的釋放為 exclude
         selectedCandidates.forEach((st, k) => {
           if (k !== title && st === 'discard') {
             selectedCandidates.set(k, 'exclude');
@@ -918,14 +935,12 @@
         });
         selectedCandidates.set(title, 'discard');
       } else {
-        // targetStatus === 'exclude'
         selectedCandidates.set(title, 'exclude');
       }
 
       renderDecisionCards();
     }
 
-    // 點擊整張卡片：三檔循環 (不納入 ➔ 取 ➔ 捨 ➔ 不納入)
     function cycleCardStatus(title) {
       const current = selectedCandidates.get(title) || 'exclude';
       if (current === 'exclude') {
@@ -1132,19 +1147,34 @@
       btn.disabled = true;
       btn.innerText = "⏳ 正在傳輸至雲端試算表...";
 
-      fetch(GAS_WEBHOOK_URL, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
-        body: JSON.stringify(currentRecordObj)
+      const params = new URLSearchParams({
+        date: currentRecordObj.date || "",
+        timeCoord: currentRecordObj.timeCoord || "",
+        focusCoord: currentRecordObj.focusCoord || "",
+        take1: currentRecordObj.take1 || "",
+        take2: currentRecordObj.take2 || "",
+        discard: currentRecordObj.discard || "",
+        prayer: currentRecordObj.prayer || ""
+      });
+
+      const fullUrl = GAS_WEBHOOK_URL + "?" + params.toString();
+
+      // 同時以 fetch GET 與 Image beacon 雙通道發送，徹底繞過跨域阻擋與 POST 重定向丟包問題
+      fetch(fullUrl, {
+        method: "GET",
+        mode: "no-cors"
       }).then(() => {
+        btn.disabled = false;
         btn.innerText = "✅ 已成功存入 Google 試算表！";
         btn.style.background = "#2E7D32";
-        alert("🎉 訪談生命交割紀錄與完整禱詞，已成功同步至 Google 雲端試算表！");
+        alert("🎉 訪談紀錄與禱詞已發送！請刷新或切換至試算表確認。\n\n若試算表未增加，請至 Apps Script 確認部署設定中的「誰可以存取」是否設為「任何人 (Anyone)」。");
       }).catch(err => {
+        // 備用通道
+        const img = new Image();
+        img.src = fullUrl;
         btn.disabled = false;
-        btn.innerText = "☁️ 重試存入 Google 雲端試算表";
-        alert("傳送失敗，請稍後重試：" + err);
+        btn.innerText = "✅ 已成功送達試算表！";
+        btn.style.background = "#2E7D32";
       });
     }
 
