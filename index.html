@@ -59,213 +59,216 @@
       padding: calc(var(--safe-top) + 12px) 16px calc(var(--safe-bottom) + 16px) 16px;
     }
 
-    .step-view {
-      display: none;
-      flex-direction: column;
-      flex: 1;
-      width: 100%;
-      animation: fadeIn 0.2s ease-out;
-    }
-    .step-view.active {
-      display: flex;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    .header-box {
+    /* 頂部標題進度區 */
+    .header-bar {
+      margin-bottom: 12px;
       text-align: center;
-      margin-bottom: 14px;
     }
-    .header-badge {
+    .phase-tag {
       font-size: 0.85rem;
-      letter-spacing: 0.15em;
+      letter-spacing: 0.08em;
       color: var(--text-sub);
-      font-weight: 700;
-      margin-bottom: 3px;
+      text-transform: uppercase;
+      margin-bottom: 2px;
+      font-weight: 500;
     }
-    .header-title {
+    .step-title {
       font-size: 1.35rem;
-      font-weight: 800;
-      color: var(--text-main);
+      font-weight: 700;
       letter-spacing: 0.02em;
-      line-height: 1.25;
+      color: var(--text-main);
     }
-    .header-desc {
+    .step-desc {
       font-size: 0.88rem;
       color: var(--text-sub);
-      margin-top: 3px;
+      margin-top: 4px;
+      line-height: 1.4;
     }
 
-    /* ──────── 階段一：生命座標・翻牌 ──────── */
-    .coord-section {
+    /* 步驟容器切換 */
+    .step-section {
+      display: none;
+      flex: 1;
+      flex-direction: column;
+    }
+    .step-section.active {
+      display: flex;
+    }
+
+    /* ──────── 階段一：生命坐標翻牌 ──────── */
+    .coord-grid-section {
       display: flex;
       flex-direction: column;
-      gap: 4px;
-      margin-bottom: 14px;
+      gap: 14px;
+      margin-top: 10px;
     }
-    .coord-group-header {
+    .coord-axis-title {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text-sub);
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 6px;
+      padding: 0 4px;
     }
-    .coord-group-title {
-      font-size: 0.95rem;
-      font-weight: 800;
-      color: var(--text-main);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-    .coord-status-badge {
-      font-size: 0.82rem;
-      font-weight: 800;
-      color: var(--highlight);
-      background: #EAE3D5;
+    .status-badge {
+      font-size: 0.8rem;
+      font-weight: 500;
       padding: 2px 8px;
-      border-radius: 6px;
-      transition: all 0.2s ease;
+      border-radius: 12px;
+      background: #EAE6DF;
+      color: var(--text-sub);
     }
-    .coord-status-badge.done {
-      color: var(--take);
+    .status-badge.done {
       background: var(--take-bg);
+      color: var(--take);
     }
 
-    .coord-grid {
+    .coord-card-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
+      gap: 8px;
     }
-
-    button.coord-card {
-      background: #FFFFFF;
-      border: 2px solid var(--card-border);
-      border-radius: 12px;
-      padding: 16px 6px;
+    .coord-card {
+      background: var(--card-bg);
+      border: 1.5px solid var(--card-border);
+      border-radius: 10px;
+      padding: 12px 6px;
       text-align: center;
       cursor: pointer;
-      box-shadow: 0 3px 8px rgba(0,0,0,0.04);
-      transition: all 0.18s cubic-bezier(0.34, 1.56, 0.64, 1);
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      min-height: 86px;
-      position: relative;
-      outline: none;
-      -webkit-appearance: none;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s ease;
+      min-height: 84px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
     }
-    button.coord-card:active {
-      transform: scale(0.95);
+    .coord-card:active {
+      transform: scale(0.97);
     }
-
-    .coord-name {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: var(--text-main);
-      line-height: 1.2;
-      pointer-events: none;
-    }
-    .coord-hint {
-      font-size: 0.78rem;
-      color: var(--text-sub);
-      margin-top: 5px;
-      font-weight: 600;
-      pointer-events: none;
-    }
-
-    button.coord-card.selected {
-      background: var(--accent) !important;
-      border-color: var(--accent) !important;
-      box-shadow: 0 6px 18px rgba(43, 42, 40, 0.35) !important;
-      transform: translateY(-2px) scale(1.02);
-    }
-    button.coord-card.selected .coord-name {
-      color: #FFFFFF !important;
-    }
-    button.coord-card.selected .coord-hint {
-      color: #E2DBD0 !important;
-    }
-    button.coord-card.selected::after {
-      content: "✓ 翻開";
-      position: absolute;
-      top: 4px;
-      right: 6px;
-      font-size: 0.68rem;
-      font-weight: 800;
-      color: #E2DBD0;
-      letter-spacing: 0.05em;
-    }
-
-    .footer-btn-wrapper {
-      margin-top: auto;
-      padding-top: 10px;
-    }
-
-    .btn-primary {
-      width: 100%;
-      background: var(--accent);
-      color: #FFFFFF;
-      font-size: 1.15rem;
-      font-weight: 800;
-      padding: 16px;
-      border-radius: 12px;
-      border: none;
-      cursor: pointer;
-      box-shadow: 0 4px 14px rgba(43, 42, 40, 0.25);
-      transition: all 0.15s ease;
-      text-align: center;
-      outline: none;
-    }
-    .btn-primary:active {
-      transform: scale(0.985);
-    }
-
-    /* ──────── 階段二：故事序章・情境提問 ──────── */
-    .prompt-container {
+    .coord-card.selected {
+      border-color: var(--accent);
       background: #FFFFFF;
+      box-shadow: 0 4px 12px rgba(43, 42, 40, 0.12);
+      border-width: 2px;
+    }
+    .coord-name {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .coord-sub {
+      font-size: 0.75rem;
+      color: var(--text-sub);
+    }
+
+    /* ──────── 階段二：故事序章對話引導 ──────── */
+    .story-focus-card {
+      background: var(--card-bg);
       border: 1.5px solid var(--card-border);
-      border-radius: 16px;
-      padding: 24px 20px;
-      margin: 10px 0;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.03);
+      border-radius: 14px;
+      padding: 22px 18px;
+      margin-top: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.04);
       display: flex;
       flex-direction: column;
       gap: 16px;
     }
-    .prompt-coord-pill {
-      align-self: flex-start;
-      background: #EFE9DE;
-      color: #554D41;
-      font-size: 0.95rem;
-      font-weight: 800;
-      padding: 6px 14px;
+    .story-coord-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #F0ECE4;
+      padding: 6px 12px;
       border-radius: 20px;
-    }
-    .prompt-quote {
-      font-size: 1.35rem;
-      font-weight: 800;
-      line-height: 1.45;
+      font-size: 0.88rem;
+      font-weight: 700;
       color: var(--text-main);
-      border-left: 4px solid var(--highlight);
-      padding-left: 12px;
+      width: fit-content;
     }
-    .prompt-guide-list {
+    .story-question {
+      font-size: 1.22rem;
+      font-weight: 700;
+      color: var(--text-main);
+      line-height: 1.5;
+      letter-spacing: 0.01em;
+    }
+    .interview-tips {
+      background: #FAF8F5;
+      border-left: 3px solid var(--accent);
+      padding: 10px 14px;
+      border-radius: 0 8px 8px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 0.88rem;
+      color: var(--text-sub);
+      line-height: 1.45;
+    }
+    .interview-tips strong {
+      color: var(--text-main);
+    }
+
+    /* 語音轉錄微型模組 */
+    .recorder-box {
+      margin-top: 8px;
+      padding: 14px;
+      border: 1.5px dashed var(--card-border);
+      border-radius: 12px;
+      background: #FFFFFF;
       display: flex;
       flex-direction: column;
       gap: 10px;
-      margin-top: 4px;
     }
-    .prompt-guide-item {
-      font-size: 1rem;
+    .recorder-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .recorder-title {
+      font-size: 0.88rem;
+      font-weight: 600;
       color: var(--text-sub);
-      line-height: 1.5;
-      padding: 8px 12px;
-      background: #FAF8F5;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .rec-status {
+      font-size: 0.78rem;
+      color: #C62828;
+      font-weight: 600;
+      display: none;
+    }
+    .rec-status.live {
+      display: inline-block;
+      animation: pulse 1.2s infinite;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+    .transcript-area {
+      width: 100%;
+      height: 90px;
+      border: 1px solid var(--card-border);
       border-radius: 8px;
+      padding: 10px;
+      font-size: 0.9rem;
+      color: var(--text-main);
+      resize: none;
+      outline: none;
+      background: #FDFCFB;
+      line-height: 1.4;
+      user-select: text;
+      -webkit-user-select: text;
+    }
+    .rec-btn-group {
+      display: flex;
+      gap: 8px;
     }
 
     /* ──────── 階段三：海選卡片（五大類醒目排列，不左右滑動） ──────── */
@@ -278,9 +281,9 @@
     }
     .cat-btn {
       border-radius: 10px;
-      border: 1.5px solid var(--card-border);
-      background: #FFFFFF;
-      color: var(--text-main);
+      border: 1.5px solid #BED6EE;
+      background: #EBF4FC;
+      color: #1F3A5A;
       font-size: 0.92rem;
       font-weight: 700;
       padding: 10px 4px;
@@ -318,228 +321,279 @@
       flex-direction: column;
       gap: 9px;
       margin-top: 8px;
-      flex: 1;
+      margin-bottom: 80px;
     }
-    .card-row {
+    .candidate-card-item {
       background: var(--card-bg);
       border: 1.5px solid var(--card-border);
       border-radius: 12px;
-      padding: 15px 16px;
+      padding: 14px 16px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      align-items: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
       transition: all 0.15s ease;
+      cursor: pointer;
     }
-    .card-row:active {
-      transform: scale(0.99);
+    .candidate-card-item:active {
+      transform: scale(0.985);
     }
-    .card-row.is-selected {
+    .candidate-card-item.selected {
       border-color: var(--accent);
-      background: #F4F1EA;
+      background: #FAFAF8;
     }
-    .card-title {
-      font-size: 1.1rem;
+    .candidate-card-title {
+      font-size: 1.05rem;
       font-weight: 700;
       color: var(--text-main);
-      flex: 1;
-      padding-right: 10px;
       line-height: 1.35;
-      pointer-events: none;
+      flex: 1;
+      padding-right: 8px;
     }
-    .card-badge {
+    .candidate-add-badge {
       font-size: 0.85rem;
-      font-weight: 700;
-      padding: 5px 12px;
-      border-radius: 14px;
-      background: #ECE7DD;
-      color: #615A4F;
-      white-space: nowrap;
-      pointer-events: none;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 20px;
+      background: #EAE6DF;
+      color: var(--text-sub);
+      transition: all 0.15s ease;
+      flex-shrink: 0;
     }
-    .card-row.is-selected .card-badge {
+    .candidate-card-item.selected .candidate-add-badge {
       background: var(--accent);
       color: #FFFFFF;
     }
 
-    /* ──────── 階段三・五：終局交割（三檔切換，可點選亦可循環） ──────── */
-    .decision-list {
+    /* ──────── 階段四：終極二留一捨（三態切換） ──────── */
+    .triage-list {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      margin: 14px 0;
-      flex: 1;
-      justify-content: center;
+      gap: 12px;
+      margin-top: 12px;
+      margin-bottom: 85px;
     }
-    .decision-card {
+    .triage-item {
       background: var(--card-bg);
       border: 2px solid var(--card-border);
       border-radius: 14px;
-      padding: 12px 14px;
+      padding: 16px 16px;
       display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
-      transition: all 0.18s ease;
-      gap: 8px;
+      flex-direction: column;
+      gap: 12px;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.03);
     }
-    .decision-card:active {
-      transform: scale(0.99);
-    }
-
-    .decision-card.status-take {
-      background: var(--take-bg);
+    .triage-item.state-take {
       border-color: var(--take-border);
+      background: var(--take-bg);
     }
-    .decision-card.status-discard {
-      background: var(--discard-bg);
+    .triage-item.state-discard {
       border-color: var(--discard-border);
+      background: var(--discard-bg);
     }
-    .decision-card.status-exclude {
-      background: var(--exclude-bg);
+    .triage-item.state-exclude {
       border-color: var(--exclude-border);
-      opacity: 0.82;
+      background: var(--exclude-bg);
+      opacity: 0.85;
     }
 
-    .decision-title {
-      font-size: 1.05rem;
-      font-weight: 700;
+    .triage-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .triage-title {
+      font-size: 1.15rem;
+      font-weight: 800;
       color: var(--text-main);
-      flex: 1;
       line-height: 1.35;
     }
-
-    /* 三檔分段控制鈕 (Segment Control) */
-    .seg-group {
-      display: flex;
-      background: #E5DFD3;
-      padding: 3px;
-      border-radius: 10px;
-      gap: 2px;
-      flex-shrink: 0;
+    .triage-curr-label {
+      font-size: 0.88rem;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 12px;
+      background: rgba(0,0,0,0.06);
     }
-    .seg-btn {
+    .state-take .triage-curr-label {
+      background: var(--take);
+      color: #FFFFFF;
+    }
+    .state-discard .triage-curr-label {
+      background: var(--discard);
+      color: #FFFFFF;
+    }
+    .state-exclude .triage-curr-label {
+      background: var(--exclude);
+      color: #FFFFFF;
+    }
+
+    /* 三態按鈕切換器 */
+    .state-toggle-group {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px;
+      background: rgba(0,0,0,0.04);
+      padding: 4px;
+      border-radius: 10px;
+    }
+    .toggle-opt-btn {
+      padding: 9px 4px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      text-align: center;
+      border-radius: 8px;
       border: none;
       background: transparent;
-      padding: 7px 11px;
-      font-size: 0.85rem;
-      font-weight: 800;
-      border-radius: 7px;
-      cursor: pointer;
-      color: #635C52;
-      transition: all 0.15s ease;
-      outline: none;
-      -webkit-appearance: none;
-    }
-    .seg-btn:active {
-      transform: scale(0.92);
-    }
-    .seg-btn.active-take {
-      background: var(--take) !important;
-      color: #FFFFFF !important;
-      box-shadow: 0 2px 5px rgba(27,94,32,0.3);
-    }
-    .seg-btn.active-discard {
-      background: var(--discard) !important;
-      color: #FFFFFF !important;
-      box-shadow: 0 2px 5px rgba(158,42,43,0.3);
-    }
-    .seg-btn.active-exclude {
-      background: #736C61 !important;
-      color: #FFFFFF !important;
-    }
-
-    .back-link-btn {
-      background: none;
-      border: none;
       color: var(--text-sub);
-      font-size: 0.9rem;
-      font-weight: 600;
-      text-decoration: underline;
       cursor: pointer;
-      text-align: center;
-      padding: 8px;
+      transition: all 0.15s ease;
+    }
+    .toggle-opt-btn:active {
+      transform: scale(0.97);
+    }
+    .toggle-opt-btn.active-take {
+      background: var(--take);
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(27,94,32,0.3);
+    }
+    .toggle-opt-btn.active-discard {
+      background: var(--discard);
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(158,42,43,0.3);
+    }
+    .toggle-opt-btn.active-exclude {
+      background: var(--exclude);
+      color: #FFFFFF;
+      box-shadow: 0 2px 6px rgba(122,117,109,0.3);
     }
 
-    /* ──────── 階段四：純粹溫柔的生命交付禱詞 ──────── */
-    .prayer-container {
-      background: #FAF8F4;
-      border: 1.5px solid #E2D7C3;
-      border-radius: 18px;
-      padding: 24px 20px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.03);
+    /* ──────── 階段五：朗讀禱詞儀式與多元匯出 ──────── */
+    .ritual-container {
       display: flex;
       flex-direction: column;
       gap: 16px;
-      margin-bottom: 12px;
+      margin-top: 10px;
+      margin-bottom: 40px;
     }
-    .prayer-top-tag {
-      align-self: center;
-      background: #EFE6D5;
-      color: #695229;
-      font-size: 0.85rem;
-      font-weight: 800;
-      padding: 4px 14px;
-      border-radius: 20px;
-      letter-spacing: 0.08em;
+    .reading-card {
+      background: #FFFFFF;
+      border: 1.5px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+      line-height: 1.85;
+      font-size: 1.12rem;
+      color: #1F1E1D;
+      letter-spacing: 0.02em;
     }
-    .prayer-speech-body {
-      font-size: 1.05rem;
-      line-height: 1.9;
-      color: #2D2721;
-      display: flex;
-      flex-direction: column;
-      gap: 14px;
-    }
-    .prayer-speech-body p {
-      margin: 0;
+    .reading-card p {
+      margin-bottom: 16px;
       text-align: justify;
     }
-    .prayer-spotlight {
-      font-weight: 800;
-      color: #1A1816;
-      background: linear-gradient(transparent 65%, #EADBBE 65%);
-      padding: 0 2px;
+    .reading-card p:last-child {
+      margin-bottom: 0;
     }
-    .prayer-verse-box {
-      margin-top: 6px;
-      padding: 14px 16px;
-      background: #F4EDE0;
-      border-radius: 12px;
-      border-left: 4px solid var(--highlight);
-      font-size: 1.02rem;
-      line-height: 1.8;
-      color: #4A3E31;
-      font-style: italic;
+    .reading-card strong {
+      color: var(--text-main);
+      font-weight: 800;
+      border-bottom: 2px solid #E4DFD7;
+      padding-bottom: 1px;
     }
 
-    /* 串接面板與輔助按鈕 */
-    .action-panel {
+    .export-box {
+      background: #FFFFFF;
+      border: 1.5px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: 12px;
     }
-    .btn-secondary-grid {
+    .export-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 8px;
     }
-    .btn-secondary {
-      background: #FFFFFF;
-      color: var(--text-main);
-      font-size: 0.95rem;
-      font-weight: 800;
-      padding: 12px 6px;
-      border-radius: 10px;
-      border: 1.5px solid var(--card-border);
-      cursor: pointer;
+
+    /* 底部懸浮按鈕欄 */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(247, 245, 240, 0.94);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid var(--card-border);
+      padding: 10px 16px calc(var(--safe-bottom) + 10px) 16px;
+      z-index: 99;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .bottom-bar-inner {
+      max-width: 540px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      gap: 8px;
+    }
+
+    /* 按鈕共用樣式 */
+    .btn-primary {
+      flex: 1;
+      background: var(--accent);
+      color: #FFFFFF;
+      border: none;
+      border-radius: 12px;
+      padding: 14px 18px;
+      font-size: 1.05rem;
+      font-weight: 700;
       text-align: center;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(43, 42, 40, 0.2);
       transition: all 0.15s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary:active {
+      transform: scale(0.98);
+    }
+    .btn-primary:disabled {
+      background: #B0AAA0;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--text-main);
+      border: 1.5px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 0.96rem;
+      font-weight: 600;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 6px;
     }
     .btn-secondary:active {
-      transform: scale(0.97);
+      background: #EAE6DF;
+    }
+
+    /* 響應微調 */
+    @media (max-width: 360px) {
+      .coord-name { font-size: 0.95rem; }
+      .cat-btn { font-size: 0.82rem; padding: 8px 2px; }
+      .candidate-card-title { font-size: 0.95rem; }
     }
   </style>
 </head>
@@ -547,94 +601,119 @@
 
   <div class="app-container">
 
-    <!-- ════════ 階段一：生命座標・序幕 ════════ -->
-    <section class="step-view active" id="view-step1">
-      <div class="header-box">
-        <div class="header-badge">生命座標 · 序幕</div>
-        <h1 class="header-title">上下兩組各翻開一張牌</h1>
-        <p class="header-desc">點擊牌面翻開；或直接按下方由系統為您開牌</p>
+    <!-- ──────── 階段一：生命坐標翻牌 ──────── -->
+    <section class="step-section active" id="step-1">
+      <div class="header-bar">
+        <div class="phase-tag">生命座標 · 序幕</div>
+        <h1 class="step-title">上下兩組各翻開一張牌</h1>
+        <p class="step-desc">點擊牌面翻開；或直接按下方由系統為您開牌</p>
       </div>
 
-      <div class="coord-section">
-        <div class="coord-group-header">
-          <span class="coord-group-title">⌛ 橫軸：時空維度</span>
-          <span class="coord-status-badge" id="badge-time">待翻開</span>
+      <div class="coord-grid-section">
+        <div>
+          <div class="coord-axis-title">
+            <span>⌛ 橫軸：時空維度</span>
+            <span class="status-badge" id="badge-time">待翻開</span>
+          </div>
+          <div class="coord-card-grid" id="grid-time">
+            <div class="coord-card" onclick="selectTimeCoord(this, '過去')">
+              <span class="coord-name">過去</span>
+              <span class="coord-sub">回溯痕跡</span>
+            </div>
+            <div class="coord-card" onclick="selectTimeCoord(this, '現在')">
+              <span class="coord-name">現在</span>
+              <span class="coord-sub">當下體感</span>
+            </div>
+            <div class="coord-card" onclick="selectTimeCoord(this, '未來')">
+              <span class="coord-name">未來</span>
+              <span class="coord-sub">前行預盼</span>
+            </div>
+          </div>
         </div>
-        <div class="coord-grid" id="grid-time">
-          <button type="button" class="coord-card" data-val="過去" onclick="pickTime('過去')">
-            <span class="coord-name">過去</span>
-            <span class="coord-hint">回溯痕跡</span>
-          </button>
-          <button type="button" class="coord-card" data-val="現在" onclick="pickTime('現在')">
-            <span class="coord-name">現在</span>
-            <span class="coord-hint">當下體感</span>
-          </button>
-          <button type="button" class="coord-card" data-val="未來" onclick="pickTime('未來')">
-            <span class="coord-name">未來</span>
-            <span class="coord-hint">前行預盼</span>
-          </button>
+
+        <div>
+          <div class="coord-axis-title">
+            <span>🎯 縱軸：心性焦點</span>
+            <span class="status-badge" id="badge-focus">待翻開</span>
+          </div>
+          <div class="coord-card-grid" id="grid-focus">
+            <div class="coord-card" onclick="selectFocusCoord(this, '最滿意的事')">
+              <span class="coord-name">最滿意的事</span>
+              <span class="coord-sub">力量來源</span>
+            </div>
+            <div class="coord-card" onclick="selectFocusCoord(this, '最大的困難')">
+              <span class="coord-name">最大的困難</span>
+              <span class="coord-sub">卡點破局</span>
+            </div>
+            <div class="coord-card" onclick="selectFocusCoord(this, '最想做的事')">
+              <span class="coord-name">最想做的事</span>
+              <span class="coord-sub">心之所向</span>
+            </div>
+          </div>
         </div>
       </div>
 
-      <div class="coord-section">
-        <div class="coord-group-header">
-          <span class="coord-group-title">🎯 縱軸：心性焦點</span>
-          <span class="coord-status-badge" id="badge-focus">待翻開</span>
+      <div class="bottom-bar">
+        <div class="bottom-bar-inner">
+          <button type="button" class="btn-secondary" style="flex:0 0 auto;" onclick="randomPickCoords()">🎲 隨機抽牌</button>
+          <button type="button" class="btn-primary" id="btn-to-step2" disabled onclick="goToStep(2)">開牌 · 故事開始</button>
         </div>
-        <div class="coord-grid" id="grid-focus">
-          <button type="button" class="coord-card" data-val="最滿意的事" onclick="pickFocus('最滿意的事')">
-            <span class="coord-name">最滿意的事</span>
-            <span class="coord-hint">力量來源</span>
-          </button>
-          <button type="button" class="coord-card" data-val="最大的困難" onclick="pickFocus('最大的困難')">
-            <span class="coord-name">最大的困難</span>
-            <span class="coord-hint">卡點破局</span>
-          </button>
-          <button type="button" class="coord-card" data-val="最想做的事" onclick="pickFocus('最想做的事')">
-            <span class="coord-name">最想做的事</span>
-            <span class="coord-hint">心之所向</span>
-          </button>
-        </div>
-      </div>
-
-      <div class="footer-btn-wrapper">
-        <button type="button" class="btn-primary" id="btn-to-step2" onclick="handleStep1Click()">
-          開牌 · 故事開始
-        </button>
       </div>
     </section>
 
-    <!-- ════════ 階段二：故事序章・情境提問 ════════ -->
-    <section class="step-view" id="view-step2">
-      <div class="header-box">
-        <div class="header-badge">故事序章 · 坐標已定</div>
-        <h1 class="header-title">看著這組座標，聽聽內心的聲音</h1>
+    <!-- ──────── 階段二：故事序章對話引導 ──────── -->
+    <section class="step-section" id="step-2">
+      <div class="header-bar">
+        <div class="phase-tag">故事序章 · 坐標已定</div>
+        <h1 class="step-title">看著這組座標，聽聽內心的聲音</h1>
       </div>
 
-      <div class="prompt-container">
-        <div class="prompt-coord-pill" id="display-coord">坐標：現在 × 最想做的事</div>
-        <div class="prompt-quote" id="display-question">「在此刻的時空下，最牽引你心神、讓你想全然投入的是什麼？」</div>
-        <div class="prompt-guide-list">
-          <div class="prompt-guide-item">💬 <b>給受訪者：</b>放下對與錯，試著從這段經歷中浮現的第一個畫面說起。</div>
-          <div class="prompt-guide-item">🎙️ <b>錄音對答：</b>此階段請暢所欲言，聊聊你的渴望、糾結，與不曾言說的實話。</div>
+      <div class="story-focus-card">
+        <div class="story-coord-badge">
+          <span>📍 坐標：</span>
+          <span id="storyCoordDisplay">現在 × 最想做的事</span>
+        </div>
+        <div class="story-question" id="storyQuestionText">
+          「在此刻的時空下，最牽引你心神、讓你想全然投入的是什麼？」
+        </div>
+        <div class="interview-tips">
+          <div>💬 <strong>給受訪者：</strong>放下對與錯，試著從這段經歷中浮現的第一個畫面說起。</div>
+          <div>🎙️ <strong>錄音對答：</strong>此階段請暢所欲言，聊聊你的渴望、糾結，與不曾言說的實話。</div>
         </div>
       </div>
 
-      <div class="footer-btn-wrapper">
-        <button type="button" class="btn-primary" onclick="goToStep(3)">
-          對話沉澱 · 挑選共鳴圖籤 ➔
-        </button>
+      <!-- 語音輔助聽寫框 -->
+      <div class="recorder-box">
+        <div class="recorder-header">
+          <div class="recorder-title">
+            <span>🎙️ 訪談傾聽錄音筆記（可語音或打字）</span>
+          </div>
+          <span class="rec-status" id="recStatus">● 正在聆聽受訪者故事...</span>
+        </div>
+        <textarea class="transcript-area" id="interviewNotes" placeholder="點擊下方按鈕開始語音辨識，或在此隨手記下受訪者對話的關鍵字..."></textarea>
+        <div class="rec-btn-group">
+          <button type="button" class="btn-secondary" id="btn-toggle-rec" style="flex:1;" onclick="toggleSpeechRec()">🎤 開始語音記錄</button>
+          <button type="button" class="btn-secondary" style="flex:0 0 auto;" onclick="clearNotes()">清空</button>
+        </div>
+      </div>
+
+      <div class="bottom-bar">
+        <div class="bottom-bar-inner">
+          <button type="button" class="btn-secondary" onclick="goToStep(1)">← 重選坐標</button>
+          <button type="button" class="btn-primary" onclick="goToStep(3)">對話沉澱 · 挑選共鳴圖籤 ➔</button>
+        </div>
       </div>
     </section>
 
-    <!-- ════════ 階段三：海選卡片（五大類醒目排列，不左右滑動） ════════ -->
-    <section class="step-view" id="view-step3">
-      <div class="header-box">
-        <div class="header-badge">尾聲交割 · 共鳴初選</div>
-        <h1 class="header-title">挑選 3-6 張有共鳴的卡片</h1>
-        <p class="header-desc">不需考慮取捨，依直覺將觸動內心的牌加入候選</p>
+    <!-- ──────── 階段三：海選卡片（五大類醒目排列，不左右滑動） ──────── -->
+    <section class="step-section" id="step-3">
+      <div class="header-bar">
+        <div class="phase-tag">尾聲交割 · 共鳴初選</div>
+        <h1 class="step-title">挑選 3-6 張有共鳴的卡片</h1>
+        <p class="step-desc">不需考慮取捨，依直覺將觸動內心的牌加入候選</p>
       </div>
 
+      <!-- 五大類雙排無捲軸分類按鈕 -->
       <div class="category-tabs" id="catTabs">
         <button type="button" class="cat-btn active" onclick="switchCategory('自主與動機')">自主與動機</button>
         <button type="button" class="cat-btn" onclick="switchCategory('面具與防衛')">面具與防衛</button>
@@ -643,555 +722,22 @@
         <button type="button" class="cat-btn" onclick="switchCategory('存在與意義')">存在與意義</button>
       </div>
 
-      <div class="card-list-full" id="cardListContainer"></div>
+      <!-- 卡片清單 -->
+      <div class="card-list-full" id="cardListContainer">
+        <!-- 動態注入 -->
+      </div>
 
-      <div class="footer-btn-wrapper">
-        <button type="button" class="btn-primary" id="btn-to-decision" onclick="goToDecisionStep()">
-          進入取捨 (已選 0 / 3-6 張)
-        </button>
+      <div class="bottom-bar">
+        <div class="bottom-bar-inner">
+          <button type="button" class="btn-primary" id="btn-to-step4" disabled onclick="goToStep(4)">
+            進入取捨 (已選 0 / 3-6 張)
+          </button>
+        </div>
       </div>
     </section>
 
-    <!-- ════════ 階段三・五：終極交割（三檔循環＋直覺切換） ════════ -->
-    <section class="step-view" id="view-decision">
-      <div class="header-box">
-        <div class="header-badge">行囊終極交割</div>
-        <h1 class="header-title">點擊卡片：帶走兩個、丟棄一個</h1>
-        <p class="header-desc">可直接點右側切換，或點擊卡片循環【不納入 ➔ 取 ➔ 捨】</p>
-      </div>
-
-      <div class="decision-list" id="decisionListContainer"></div>
-
-      <div class="footer-btn-wrapper" style="display:flex; flex-direction:column; gap:6px;">
-        <button type="button" class="btn-primary" id="btn-to-step4" onclick="handleDecisionSubmit()">
-          確認行囊 · 交付祝福（二留一捨）
-        </button>
-        <button type="button" class="back-link-btn" onclick="goToStep(3)">← 返回調整挑選的卡片</button>
-      </div>
-    </section>
-
-    <!-- ════════ 階段四：純粹柔和的生命交付禱詞 ════════ -->
-    <section class="step-view" id="view-step4">
-      <div class="header-box">
-        <div class="header-badge">交付祝福 · 儀式完成</div>
-        <h1 class="header-title" id="reportCoordTitle">生命坐標：現在 × 最想做的事</h1>
-        <p class="header-desc">📖 請雙手持機，以溫柔平靜的語調為受訪者朗讀</p>
-      </div>
-
-      <div class="prayer-container">
-        <div class="prayer-top-tag">🕊️ 局內人 · 生命交付與祝福禱詞</div>
-        <div class="prayer-speech-body" id="spokenPrayerText"></div>
-      </div>
-
-      <div class="action-panel">
-        <button type="button" class="btn-primary" onclick="copyFullPrayer()">📋 複製完整朗讀禱詞</button>
-
-        <button type="button" class="btn-primary" id="btn-sync-sheet" style="background:#1B5E20; box-shadow: 0 4px 14px rgba(27,94,32,0.25);" onclick="syncToGoogleSheet()">
-          ☁️ 一鍵存入 Google 雲端試算表
-        </button>
-        <div style="text-align:center; margin-top:-2px; margin-bottom:4px;">
-          <a href="https://docs.google.com/spreadsheets/d/1doZiE7MI7TM7OUJPCqklNviB9Sixy7KlqlPc_lQQXEw/edit" target="_blank" style="color:#6E685F; font-size:0.84rem; text-decoration:underline; font-weight:600;">📊 前往查看【局內人生命交割資料庫】試算表 ↗</a>
-        </div>
-
-        <div class="btn-secondary-grid">
-          <button type="button" class="btn-secondary" onclick="downloadTextFile()">📄 下載文字檔 (.txt)</button>
-          <button type="button" class="btn-secondary" onclick="downloadCsvFile()">📊 下載試算表 (.csv)</button>
-        </div>
-
-        <button type="button" class="btn-primary" style="background:#70695E; margin-top:4px;" onclick="restartAll()">🔄 重新整理開局</button>
-      </div>
-    </section>
-
-  </div>
-
-  <script>
-    let selectedTime = null;
-    let selectedFocus = null;
-    let currentCategory = "自主與動機";
-
-    // 儲存狀態：'exclude' | 'take' | 'discard'
-    let selectedCandidates = new Map();
-
-    const cardsDB = {
-      "自主與動機": [
-        "掌控生活節奏的自主權",
-        "證明自身價值的勝任感",
-        "被群體接納的安全歸屬",
-        "滿足外界期待的責任包袱",
-        "追求自我實現的內在渴望",
-        "擺脫他人評價的自由意志"
-      ],
-      "面具與防衛": [
-        "看似無所謂的冷靜外衣",
-        "習慣報喜不報憂的堅強",
-        "凡事親力親為的控制欲",
-        "害怕被拒絕的討好迎合",
-        "停不下來的過度準備",
-        "預設最壞結果的過度防衛"
-      ],
-      "邊界與課題": [
-        "難以開口拒絕的人情負擔",
-        "替他人的人生課題背負責任",
-        "渴望親密卻又恐懼失去邊界",
-        "職場角色與真實自我的撕裂",
-        "家庭期待與個人志向的拉扯",
-        "守護個人心理空間的界線"
-      ],
-      "損失與權衡": [
-        "難以割捨的沉沒成本",
-        "害怕承擔選擇後的未知代價",
-        "放棄穩定換取未知的冒險",
-        "在現實生計與理想熱情間妥協",
-        "顧全大局而做出的自我退讓",
-        "過去挫折留下的隱性創傷"
-      ],
-      "存在與意義": [
-        "渴望被深度看見與認可",
-        "給予家庭與後輩的寄託",
-        "在有限生命中留下痕跡的期盼",
-        "面對生命不確定性的安住心念",
-        "歷經考驗後的自我和解",
-        "找到靈魂安身立命的錨點"
-      ]
-    };
-
-    const coordQuestions = {
-      "過去_最滿意的事": "「在那段時光裡，你做對了什麼，成為了支撐你至今的底氣？」",
-      "過去_最大的困難": "「當時最艱難的那道檻，你究竟是怎麼熬過來的？付出了什麼代價？」",
-      "過去_最想做的事": "「那些年曾熱烈想做卻擱置的事，如今在你心裡留下了什麼回聲？」",
-
-      "現在_最滿意的事": "「在當下的混亂或節奏中，最讓你感到踏實、值得慶幸的是哪一刻？」",
-      "現在_最大的困難": "「此刻卡在你喉嚨深處、最難以向外人啟齒的瓶頸是什麼？」",
-      "現在_最想做的事": "「如果卸下所有包袱與他人期待，此刻你最想全力為自己做什麼？」",
-
-      "未來_最滿意的事": "「想像幾年後的自己，你最希望看見自己守住了哪一份初心？」",
-      "未來_最大的困難": "「展望前路，你最害怕即將面臨的哪一種未知與失控？」",
-      "未來_最想做的事": "「在下一個生命篇章中，哪一個願景讓你哪怕害怕也願意啟程？」"
-    };
-
-    // ──────── 階段一：翻牌互動 ────────
-    function pickTime(val) {
-      selectedTime = val;
-      document.querySelectorAll('#grid-time .coord-card').forEach(btn => {
-        btn.classList.toggle('selected', btn.getAttribute('data-val') === val);
-      });
-      const badge = document.getElementById('badge-time');
-      badge.innerText = `✓ ${val}`;
-      badge.classList.add('done');
-      updateStep1UI();
-    }
-
-    function pickFocus(val) {
-      selectedFocus = val;
-      document.querySelectorAll('#grid-focus .coord-card').forEach(btn => {
-        btn.classList.toggle('selected', btn.getAttribute('data-val') === val);
-      });
-      const badge = document.getElementById('badge-focus');
-      badge.innerText = `✓ ${val}`;
-      badge.classList.add('done');
-      updateStep1UI();
-    }
-
-    document.querySelectorAll('#grid-time .coord-card').forEach(btn => {
-      btn.onclick = function() { pickTime(this.getAttribute('data-val')); };
-    });
-
-    document.querySelectorAll('#grid-focus .coord-card').forEach(btn => {
-      btn.onclick = function() { pickFocus(this.getAttribute('data-val')); };
-    });
-
-    function updateStep1UI() {
-      const btn = document.getElementById('btn-to-step2');
-      if (selectedTime && selectedFocus) {
-        btn.innerText = `開牌 · 故事開始（${selectedTime} × ${selectedFocus}）➔`;
-      } else if (selectedTime && !selectedFocus) {
-        btn.innerText = `已選【${selectedTime}】，點此隨機開焦點，或手動點選`;
-      } else if (!selectedTime && selectedFocus) {
-        btn.innerText = `已選【${selectedFocus}】，點此隨機開時空，或手動點選`;
-      } else {
-        btn.innerText = "開牌 · 故事開始（手選或點此隨機開牌）";
-      }
-    }
-
-    function handleStep1Click() {
-      const times = ['過去', '現在', '未來'];
-      const focuses = ['最滿意的事', '最大的困難', '最想做的事'];
-
-      if (!selectedTime) pickTime(times[Math.floor(Math.random() * times.length)]);
-      if (!selectedFocus) pickFocus(focuses[Math.floor(Math.random() * focuses.length)]);
-
-      setTimeout(() => { goToStep(2); }, 150);
-    }
-
-    // ──────── 頁面導航 ────────
-    function goToStep(stepNum) {
-      document.querySelectorAll('.step-view').forEach(v => v.classList.remove('active'));
-      const target = document.getElementById(`view-step${stepNum}`);
-      if (target) target.classList.add('active');
-
-      if (stepNum === 2) {
-        const coordKey = `${selectedTime}_${selectedFocus}`;
-        const qText = coordQuestions[coordKey] || "「在這個生命座標下，靜下心來，聊聊你最深處的體會。」";
-        document.getElementById('display-coord').innerText = `生命坐標：${selectedTime} × ${selectedFocus}`;
-        document.getElementById('display-question').innerText = qText;
-      } else if (stepNum === 3) {
-        renderCardsStep3();
-      } else if (stepNum === 4) {
-        renderReportAndPrayer();
-      }
-      window.scrollTo(0, 0);
-    }
-
-    // ──────── 階段三：初選 ────────
-    function switchCategory(cat) {
-      currentCategory = cat;
-      document.querySelectorAll('.cat-btn').forEach(b => {
-        b.classList.toggle('active', b.innerText === cat);
-      });
-      renderCardsStep3();
-    }
-
-    function renderCardsStep3() {
-      const container = document.getElementById('cardListContainer');
-      container.innerHTML = "";
-      const list = cardsDB[currentCategory] || [];
-
-      list.forEach(title => {
-        const isSelected = selectedCandidates.has(title);
-        const row = document.createElement('div');
-        row.className = `card-row ${isSelected ? 'is-selected' : ''}`;
-        row.innerHTML = `
-          <span class="card-title">${title}</span>
-          <span class="card-badge">${isSelected ? '✓ 已入選' : '+ 加入'}</span>
-        `;
-        row.onclick = () => toggleSelectCandidate(title);
-        container.appendChild(row);
-      });
-
-      updateStep3Button();
-    }
-
-    function toggleSelectCandidate(title) {
-      if (selectedCandidates.has(title)) {
-        selectedCandidates.delete(title);
-      } else {
-        if (selectedCandidates.size >= 6) {
-          alert("最多挑選 6 張卡片進行終極抉擇喔！");
-          return;
-        }
-        selectedCandidates.set(title, 'exclude');
-      }
-      renderCardsStep3();
-    }
-
-    function updateStep3Button() {
-      const count = selectedCandidates.size;
-      const btn = document.getElementById('btn-to-decision');
-      if (count >= 3 && count <= 6) {
-        btn.innerText = `進入取捨 (已選 ${count} 張) ➔`;
-      } else {
-        btn.innerText = `進入取捨 (已選 ${count}/3-6 張，還差 ${Math.max(0, 3 - count)} 張)`;
-      }
-    }
-
-    function goToDecisionStep() {
-      const count = selectedCandidates.size;
-      if (count < 3 || count > 6) {
-        alert("請挑選 3 到 6 張有共鳴的卡片喔！");
-        return;
-      }
-
-      // 初始預設前 2 個取、第 3 個捨、其餘不納入
-      let idx = 0;
-      for (let [title] of selectedCandidates.entries()) {
-        if (idx === 0 || idx === 1) selectedCandidates.set(title, 'take');
-        else if (idx === 2) selectedCandidates.set(title, 'discard');
-        else selectedCandidates.set(title, 'exclude');
-        idx++;
-      }
-
-      document.querySelectorAll('.step-view').forEach(v => v.classList.remove('active'));
-      document.getElementById('view-decision').classList.add('active');
-      renderDecisionCards();
-      window.scrollTo(0, 0);
-    }
-
-    // ──────── 階段三・五：三檔切換（取二留一保證不卡死） ────────
-    function setCardStatusDirect(title, targetStatus) {
-      if (targetStatus === 'take') {
-        let existingTakes = [];
-        selectedCandidates.forEach((st, k) => {
-          if (k !== title && st === 'take') existingTakes.push(k);
-        });
-        if (existingTakes.length >= 2) {
-          selectedCandidates.set(existingTakes[0], 'exclude');
-        }
-        selectedCandidates.set(title, 'take');
-      } else if (targetStatus === 'discard') {
-        selectedCandidates.forEach((st, k) => {
-          if (k !== title && st === 'discard') {
-            selectedCandidates.set(k, 'exclude');
-          }
-        });
-        selectedCandidates.set(title, 'discard');
-      } else {
-        selectedCandidates.set(title, 'exclude');
-      }
-
-      renderDecisionCards();
-    }
-
-    function cycleCardStatus(title) {
-      const current = selectedCandidates.get(title) || 'exclude';
-      if (current === 'exclude') {
-        let takeCount = 0, discardCount = 0;
-        selectedCandidates.forEach(st => {
-          if (st === 'take') takeCount++;
-          if (st === 'discard') discardCount++;
-        });
-        if (takeCount >= 2 && discardCount === 0) {
-          setCardStatusDirect(title, 'discard');
-        } else {
-          setCardStatusDirect(title, 'take');
-        }
-      } else if (current === 'take') {
-        setCardStatusDirect(title, 'discard');
-      } else if (current === 'discard') {
-        setCardStatusDirect(title, 'exclude');
-      }
-    }
-
-    function renderDecisionCards() {
-      const container = document.getElementById('decisionListContainer');
-      container.innerHTML = "";
-
-      let takeCount = 0, discardCount = 0;
-      let takeIndexMap = new Map();
-
-      selectedCandidates.forEach((status, title) => {
-        if (status === 'take') {
-          takeCount++;
-          takeIndexMap.set(title, takeCount);
-        }
-        if (status === 'discard') discardCount++;
-      });
-
-      selectedCandidates.forEach((status, title) => {
-        const card = document.createElement('div');
-        card.className = `decision-card status-${status}`;
-
-        card.onclick = (e) => {
-          if (e.target.tagName.toLowerCase() === 'button') return;
-          cycleCardStatus(title);
-        };
-
-        const isTake = (status === 'take');
-        const isDiscard = (status === 'discard');
-        const isExclude = (status === 'exclude');
-        const takeLabel = isTake ? `🌿 取 ${takeIndexMap.get(title)}` : '🌿 取';
-
-        card.innerHTML = `
-          <div class="decision-title">${title}</div>
-          <div class="seg-group">
-            <button type="button" class="seg-btn ${isTake ? 'active-take' : ''}" onclick="setCardStatusDirect('${title}', 'take')">${takeLabel}</button>
-            <button type="button" class="seg-btn ${isDiscard ? 'active-discard' : ''}" onclick="setCardStatusDirect('${title}', 'discard')">🕊️ 捨</button>
-            <button type="button" class="seg-btn ${isExclude ? 'active-exclude' : ''}" onclick="setCardStatusDirect('${title}', 'exclude')">⚪ 留白</button>
-          </div>
-        `;
-        container.appendChild(card);
-      });
-
-      const confirmBtn = document.getElementById('btn-to-step4');
-      const isValid = (takeCount === 2 && discardCount === 1);
-      if (isValid) {
-        confirmBtn.innerText = "確認行囊 · 交付祝福（二留一捨）➔";
-      } else {
-        confirmBtn.innerText = `請點選為「二取一捨」(目前 取:${takeCount}/2 捨:${discardCount}/1)`;
-      }
-    }
-
-    function handleDecisionSubmit() {
-      let takeCount = 0, discardCount = 0;
-      selectedCandidates.forEach(st => {
-        if (st === 'take') takeCount++;
-        if (st === 'discard') discardCount++;
-      });
-
-      if (takeCount !== 2 || discardCount !== 1) {
-        alert("請調整為剛好 2 個帶走（取）與 1 個放下（捨）喔！");
-        return;
-      }
-      goToStep(4);
-    }
-
-    // ──────── 階段四：完全可朗讀的生命禱詞生成 ────────
-    let currentPrayerFullText = "";
-    let currentRecordObj = {};
-
-    function renderReportAndPrayer() {
-      document.getElementById('reportCoordTitle').innerText = `生命坐標：${selectedTime} × ${selectedFocus}`;
-
-      let takes = [];
-      let discard = "";
-
-      selectedCandidates.forEach((status, title) => {
-        if (status === 'take') takes.push(title);
-        if (status === 'discard') discard = title;
-      });
-
-      const t1 = takes[0] || "心靈的寧靜";
-      const t2 = takes || "向前的勇氣";
-      const disc = discard || "舊日的負擔";
-
-      let timeProse = "";
-      if (selectedTime === "過去") {
-        timeProse = `回望那些走過的歲月，面對記憶深處的「${selectedFocus}」——生命曾賦予你磨礪，也曾在那裡悄悄埋下了屬於你的光芒。`;
-      } else if (selectedTime === "現在") {
-        timeProse = `立足於此時此刻的當下，面對真實觸及的「${selectedFocus}」——你在喧囂的日常之中，終於看清了靈魂深處最在乎的重量。`;
-      } else {
-        timeProse = `凝視前方嶄新的長路，面對即將展開的「${selectedFocus}」——未知的風景正等待著你，以最純粹的心境親手鋪展。`;
-      }
-
-      const container = document.getElementById('spokenPrayerText');
-      container.innerHTML = `
-        <p>親愛的局內人，在此刻的時空裡，我們一同見證這場生命的對話與交割。</p>
-        <p>${timeProse}</p>
-        <p>
-          今天，在此刻的沉澱之中，我們首先向<span class="prayer-spotlight">「${disc}」</span>深深致謝。<br>
-          長久以來，它曾是你對抗風雨、抵擋失控的沉重鎧甲；但在此刻，它的守護使命已經圓滿。請容許自己溫柔地將它卸下、安放於歲月深處，感謝它一路以來的相伴，從今而後，不再受其牽絆。
-        </p>
-        <p>
-          同時，請你敞開雙手，珍重地接納屬於你的真實底氣——<br>
-          <span class="prayer-spotlight">「${t1}」</span>，以及<span class="prayer-spotlight">「${t2}」</span>。<br>
-          這不是沉重的包袱，而是你在千百思緒中淘洗出的黃金，是你穿透迷霧、安身立命最深的力量。
-        </p>
-        <div class="prayer-verse-box">
-          「願生命賜你從容，接納不可改變的際遇；<br>
-          願勇氣常伴隨你，守護值得傾注的真心。<br>
-          取捨已定，局已清澈。願你輕裝啟程，步步心安，落子無悔。」
-        </div>
-      `;
-
-      currentPrayerFullText = `【局內人 · 生命交付與祝福禱詞】\n\n` +
-        `生命座標：${selectedTime} × ${selectedFocus}\n\n` +
-        `親愛的局內人，在此刻的時空裡，我們一同見證這場生命的對話與交割。\n\n` +
-        `${timeProse}\n\n` +
-        `今天，在此刻的沉澱之中，我們首先向「${disc}」深深致謝。長久以來，它曾是你對抗風雨、抵擋失控的沉重鎧甲；但在此刻，它的守護使命已經圓滿。請容許自己溫柔地將它卸下、安放於歲月深處，感謝它一路以來的相伴，從今而後，不再受其牽絆。\n\n` +
-        `同時，請你敞開雙手，珍重地接納屬於你的真實底氣——「${t1}」，以及「${t2}」。這不是沉重的包袱，而是你在千百思緒中淘洗出的黃金，是你穿透迷霧、安身立命最深的力量。\n\n` +
-        `「願生命賜你從容，接納不可改變的際遇；願勇氣常伴隨你，守護值得傾注的真心。取捨已定，局已清澈。願你輕裝啟程，步步心安，落子無悔。」\n\n` +
-        `— 來自 大大觀察家 · 局內人圖籤`;
-
-      currentRecordObj = {
-        date: new Date().toISOString().split('T')[0],
-        timeCoord: selectedTime,
-        focusCoord: selectedFocus,
-        take1: t1,
-        take2: t2,
-        discard: disc,
-        prayer: currentPrayerFullText
-      };
-    }
-
-    // ──────── 匯出、複製與雲端串接 ────────
-    function copyFullPrayer() {
-      navigator.clipboard.writeText(currentPrayerFullText).then(() => {
-        alert("已成功複製完整生命交付禱詞！");
-      });
-    }
-
-    function getFilenameBase() {
-      const now = new Date();
-      const dateStr = now.toISOString().slice(0,10).replace(/-/g, '');
-      return `局內人生命交割_${dateStr}_${selectedTime}_${selectedFocus}`;
-    }
-
-    function downloadTextFile() {
-      const filename = `${getFilenameBase()}.txt`;
-      const blob = new Blob([currentPrayerFullText], { type: "text/plain;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    function downloadCsvFile() {
-      const filename = `${getFilenameBase()}.csv`;
-      const headers = ["時間戳記", "訪談日期", "時空維度", "心性焦點", "取1_核心底氣", "取2_核心底氣", "捨_卸下防衛", "生命交付禱詞全文"];
-      const row = [
-        new Date().toLocaleString(),
-        currentRecordObj.date,
-        currentRecordObj.timeCoord,
-        currentRecordObj.focusCoord,
-        `"${currentRecordObj.take1.replace(/"/g, '""')}"`,
-        `"${currentRecordObj.take2.replace(/"/g, '""')}"`,
-        `"${currentRecordObj.discard.replace(/"/g, '""')}"`,
-        `"${currentRecordObj.prayer.replace(/"/g, '""')}"`
-      ];
-      const csvContent = "\uFEFF" + headers.join(",") + "\n" + row.join(",");
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-
-    // 已直接內建您的 Web App URL
-    const GAS_WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxWVFfy-6cIzziMAux1UaHHdmqAQAyM_zHxbjTEVOU9tj9a082J8dA069pUsYH8FK3s/exec";
-
-    function syncToGoogleSheet() {
-      const btn = document.getElementById('btn-sync-sheet');
-      btn.disabled = true;
-      btn.innerText = "⏳ 正在傳輸至雲端試算表...";
-
-      const params = new URLSearchParams({
-        date: currentRecordObj.date || "",
-        timeCoord: currentRecordObj.timeCoord || "",
-        focusCoord: currentRecordObj.focusCoord || "",
-        take1: currentRecordObj.take1 || "",
-        take2: currentRecordObj.take2 || "",
-        discard: currentRecordObj.discard || "",
-        prayer: currentRecordObj.prayer || ""
-      });
-
-      const fullUrl = GAS_WEBHOOK_URL + "?" + params.toString();
-
-      // 同時以 fetch GET 與 Image beacon 雙通道發送，徹底繞過跨域阻擋與 POST 重定向丟包問題
-      fetch(fullUrl, {
-        method: "GET",
-        mode: "no-cors"
-      }).then(() => {
-        btn.disabled = false;
-        btn.innerText = "✅ 已成功存入 Google 試算表！";
-        btn.style.background = "#2E7D32";
-        alert("🎉 訪談紀錄與禱詞已發送！請刷新或切換至試算表確認。\n\n若試算表未增加，請至 Apps Script 確認部署設定中的「誰可以存取」是否設為「任何人 (Anyone)」。");
-      }).catch(err => {
-        // 備用通道
-        const img = new Image();
-        img.src = fullUrl;
-        btn.disabled = false;
-        btn.innerText = "✅ 已成功送達試算表！";
-        btn.style.background = "#2E7D32";
-      });
-    }
-
-    function restartAll() {
-      selectedTime = null;
-      selectedFocus = null;
-      selectedCandidates.clear();
-      document.querySelectorAll('.coord-card').forEach(c => c.classList.remove('selected'));
-      document.getElementById('badge-time').innerText = "待翻開";
-      document.getElementById('badge-time').classList.remove('done');
-      document.getElementById('badge-focus').innerText = "待翻開";
-      document.getElementById('badge-focus').classList.remove('done');
-      updateStep1UI();
-      goToStep(1);
-    }
-
-    renderCardsStep3();
-  </script>
-</body>
-</html>
+    <!-- ──────── 階段四：終極二留一捨（三態切換） ──────── -->
+    <section class="step-section" id="step-4">
+      <div class="header-bar">
+        <div class="phase-tag">行囊終極交割</div>
+        <h1 c
