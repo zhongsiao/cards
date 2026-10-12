@@ -47,6 +47,7 @@
       min-height: 100dvh;
       display: flex;
       flex-direction: column;
+      touch-action: manipulation;
     }
 
     .app-container {
@@ -157,6 +158,8 @@
       position: relative;
       outline: none;
       -webkit-appearance: none;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
     }
     button.coord-card:active {
       transform: scale(0.95);
@@ -206,6 +209,7 @@
     }
 
     .btn-primary {
+      touch-action: manipulation;
       width: 100%;
       background: var(--accent);
       color: #FFFFFF;
@@ -268,7 +272,7 @@
       border-radius: 8px;
     }
 
-    /* ──────── 階段三：海選卡片（五大類醒目排列，不左右滑動） ──────── */
+    /* ──────── 階段三：海選卡片（五大類醒目淺藍底，不左右滑動） ──────── */
     .category-tabs {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
@@ -411,7 +415,6 @@
       line-height: 1.35;
     }
 
-    /* 三檔分段控制鈕 (Segment Control) */
     .seg-group {
       display: flex;
       background: #E5DFD3;
@@ -515,7 +518,6 @@
       font-style: italic;
     }
 
-    /* 串接面板與輔助按鈕 */
     .action-panel {
       display: flex;
       flex-direction: column;
@@ -540,34 +542,6 @@
     }
     .btn-secondary:active {
       transform: scale(0.97);
-    }
-    .sheet-sync-box {
-      background: #FAF6ED;
-      border: 1.5px dashed #D6C7AA;
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-top: 6px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-    .sheet-sync-title {
-      font-size: 0.88rem;
-      font-weight: 800;
-      color: #6E5325;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .sheet-input {
-      width: 100%;
-      padding: 9px 12px;
-      border-radius: 8px;
-      border: 1px solid #CCC0A8;
-      font-size: 0.88rem;
-      background: #FFF;
-      box-sizing: border-box;
-      outline: none;
     }
   </style>
 </head>
@@ -655,7 +629,7 @@
       </div>
     </section>
 
-    <!-- ════════ 階段三：海選卡片（滿版大字體，挑 3-6 張） ════════ -->
+    <!-- ════════ 階段三：海選卡片（五大類醒目淺藍底，挑 3-6 張） ════════ -->
     <section class="step-view" id="view-step3">
       <div class="header-box">
         <div class="header-badge">尾聲交割 · 共鳴初選</div>
@@ -722,4 +696,16 @@
         <button type="button" class="btn-primary" id="btn-sync-sheet" style="background:#1B5E20; box-shadow: 0 4px 14px rgba(27,94,32,0.25);" onclick="syncToGoogleSheet()">
           ☁️ 一鍵存入 Google 雲端試算表
         </button>
-        <div
+        <div style="text-align:center; margin-top:-2px; margin-bottom:4px;">
+          <a href="https://docs.google.com/spreadsheets/d/1doZiE7MI7TM7OUJPCqklNviB9Sixy7KlqlPc_lQQXEw/edit" target="_blank" style="color:#6E685F; font-size:0.84rem; text-decoration:underline; font-weight:600;">📊 前往查看【局內人生命交割資料庫】試算表 ↗</a>
+        </div>
+
+        <button type="button" class="btn-primary" style="background:#70695E; margin-top:4px;" onclick="restartAll()">🔄 重新整理開局</button>
+      </div>
+    </section>
+
+  </div>
+
+  <script>
+    let selectedTime = null;
+    let selectedF
